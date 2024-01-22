@@ -1,5 +1,5 @@
 import React from "react";
-import SignUpForm from "./form";
+import SignUpForm from "./signup-form";
 import SideContent from "./side-content";
 
 export default function SignUpComponent() {

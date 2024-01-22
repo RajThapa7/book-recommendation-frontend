@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import BookCard from "./book-card";
@@ -7,11 +7,25 @@ import SearchInput from "@/components/common/input/search-input";
 import ErrorMessage from "@/components/common/text/error-message";
 import Option from "@/components/common/input/option-input";
 import SectionTitle from "@/components/common/text/section-title";
+import useSWR from "swr";
+import { Book } from "@/api/routes";
+import { get_fetch } from "@/api/api-provider";
+import axios from "axios";
 
 const validationSchema = Yup.object({
   search: Yup.string().required("Please enter search text"),
 });
 export default function BookComponent() {
+  const [data, setData] = useState<any>();
+  useEffect(() => {
+    const fetchData = async () => {
+      // Call the asynchronous function and log the result
+      console.log(await get_fetch(Book._getAllBookList()));
+    };
+
+    // Invoke the async function
+    fetchData();
+  }, []);
   const formik = useFormik({
     initialValues: {
       search: "",

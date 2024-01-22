@@ -10,24 +10,34 @@ import ButtonComponent from "@/components/common/button/button";
 import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
 import LinkTag from "@/components/common/text/link";
+import { LoginPayload } from "./login-interface";
+import { useRouter } from "next/navigation";
+import { get_fetch } from "@/api/api-provider";
+import { Auth } from "@/api/routes";
 
 const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
+  username: Yup.string().required("User name is required"),
   password: Yup.string().required("Password is required"),
 });
 
 const LoginForm = () => {
+  const navigate = useRouter();
   const formik = useFormik({
     initialValues: {
-      email: "",
+      username: "",
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+
+    onSubmit: async (values: LoginPayload) => {
       // Handle form submission here
-      console.log(values);
+      let response = await get_fetch(Auth._authSuccess());
+      if (response) {
+        localStorage.setItem("token", response?.token);
+        localStorage.setItem("user", JSON.stringify(response?.user));
+        navigate.replace("/");
+      }
+      console.log(response);
     },
   });
 
@@ -44,17 +54,17 @@ const LoginForm = () => {
       <form className="flex flex-col gap-4 pt-6" onSubmit={formik.handleSubmit}>
         <div className="w-full">
           <InputComponent
-            type="email"
-            placeholder="Enter your email here"
-            id="email"
-            name="email"
-            label="Email"
+            type="text"
+            placeholder="Enter your user name"
+            id="username"
+            name="username"
+            label="User Name"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.email}
+            value={formik.values.username}
           />
-          {formik.touched.email && formik.errors.email && (
-            <ErrorMessage text={formik.errors.email}></ErrorMessage>
+          {formik.touched.username && formik.errors.username && (
+            <ErrorMessage text={formik.errors.username}></ErrorMessage>
           )}
         </div>
         <div className="w-full">
