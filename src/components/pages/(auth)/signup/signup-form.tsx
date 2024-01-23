@@ -11,6 +11,9 @@ import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
 import LinkTag from "@/components/common/text/link";
 import { routes } from "@/contants/routes";
+import useSWRMutation from "swr/mutation";
+import { Auth } from "@/api/routes";
+import { SignUpPostRequest } from "./signup-post-api";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -21,41 +24,44 @@ const validationSchema = Yup.object({
 });
 
 const SignUpForm = () => {
+  const {
+    data,
+    trigger: _signUpCallTrigger,
+    error: _signUpCallError,
+  } = useSWRMutation(Auth._register(), SignUpPostRequest);
+
   const formik = useFormik({
     initialValues: {
       email: "",
-      name: "",
+      username: "",
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      // Handle form submission here
-      console.log(values);
+    onSubmit: async (values) => {
+      console.log(values)
+      await _signUpCallTrigger(values);
     },
   });
 
   return (
     <div className="justify-center h-full flex flex-col w-[60%] mx-auto">
       <div className="text-center pb-6">
-        <FormHeader
-          text="Create an account"
-          key={"sign-up-header-text"}
-        />
+        <FormHeader text="Create an account" key={"sign-up-header-text"} />
       </div>
       <form className="flex flex-col gap-4" onSubmit={formik.handleSubmit}>
         <div className="w-full">
           <InputComponent
             type="text"
-            placeholder="Enter your full name"
+            placeholder="Enter your username"
             id="name"
-            name="name"
-            label="Full Name"
+            name="username"
+            label="User Name"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.name}
+            value={formik.values.username}
           />
-          {formik.touched.name && formik.errors.name && (
-            <ErrorMessage text={formik.errors.name}></ErrorMessage>
+          {formik.touched.username && formik.errors.username && (
+            <ErrorMessage text={formik.errors.username}></ErrorMessage>
           )}
         </div>
         <div className="w-full">

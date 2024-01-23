@@ -10,25 +10,15 @@ import SectionTitle from "@/components/common/text/section-title";
 import useSWR from "swr";
 import { Book } from "@/api/routes";
 import { get_fetch } from "@/api/api-provider";
-import axios from "axios";
 
 const validationSchema = Yup.object({
   search: Yup.string().required("Please enter search text"),
 });
 export default function BookComponent() {
-  const [data, setData] = useState<any>();
-  useEffect(() => {
-    const fetchData = async () => {
-      // Call the asynchronous function and log the result
-      console.log(await get_fetch(Book._getAllBookList()));
-    };
-
-    // Invoke the async function
-    fetchData();
-  }, []);
   const formik = useFormik({
     initialValues: {
       search: "",
+      optionValue:""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -36,6 +26,17 @@ export default function BookComponent() {
       console.log(values);
     },
   });
+  const { data, isLoading, error } = useSWR(Book._searchBookList(formik?.values?.search,formik?.values?.optionValue), get_fetch, {
+    revalidateOnFocus: false,
+  });
+  const {
+    data: recommendedBooks,
+    isLoading: isRecommendationLoading,
+    error: RecommendationError,
+  } = useSWR(Book._getBooksRecommendation(), get_fetch, {
+    revalidateOnFocus: false,
+  });
+
   return (
     <div className="flex flex-col gap-6 w-4/5 mx-auto  py-24 ">
       <SectionTitle
@@ -59,12 +60,38 @@ export default function BookComponent() {
             <ErrorMessage text={formik.errors.search}></ErrorMessage>
           )}
         </form>
-        <Option />
+        <Option onChangeHandler={(target:any) => formik.setFieldValue('optionValue',target?.target?.value)}/>
+      </div>
+      <SectionTitle text="Check out our new collection" className="text-h4" />
+      <div className="flex flex-wrap gap-12">
+        {data?.data?.length > 0 ? data?.data?.map((p: any, index: number) => (
+          <BookCard
+            key={index + "recommend"}
+            title={p?.title}
+            rating={p?.average_rating}
+            image={p?.image_url}
+            author={p?.authors}
+            language={p?.language_code}
+            date={p?.original_publication_year}
+            id={p?._id}
+          />
+        )):(
+          <p className="text-center text-black text-2xl">No results found with your search keyword: <span className="text-red-600">"{formik.values?.search}"</span></p>
+        )}
       </div>
       <SectionTitle text="Our Recommendations" className="text-h4" />
-      <div className="grid grid-cols-4 gap-4">
-        {Array.from({ length: 20 }).map((_, index) => (
-          <BookCard key={index + "recommend"} />
+      <div className="flex flex-wrap gap-12">
+        {recommendedBooks?.data?.map((p: any, index: number) => (
+          <BookCard
+            key={index + "recommend"}
+            title={p?.title}
+            rating={p?.average_rating}
+            image={p?.image_url}
+            author={p?.authors}
+            language={p?.language_code}
+            date={p?.original_publication_year}
+            id={p?._id}
+          />
         ))}
       </div>
     </div>

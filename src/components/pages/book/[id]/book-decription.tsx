@@ -1,20 +1,36 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import useSWR from "swr";
+import { Book } from "@/api/routes";
+import { get_fetch } from "@/api/api-provider";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function BookDescription() {
+  const path = usePathname();
+  const { data, isLoading, error } = useSWR(
+    Book._getBookById(path?.replace("/books/", "")),
+    get_fetch,
+    {
+      revalidateOnFocus: false,
+    }
+  );
   return (
     <div className="flex flex-row gap-10 items-center">
       <Image
-        src="/images/book.png"
+        src={data?.data?.image_url}
         alt="book-image"
         className="rounded-lg w-[290px] h-[470px]"
         width={290}
         height={470}
       />
       <div className="flex flex-col gap-3">
-        <p className="text-h1 text-primary-black font-h1">Roman</p>
-        <p className="text-h4 text-primary-black font-link">Olivia Olsan</p>
+        <p className="text-h1 text-primary-black font-h1">
+          {data?.data?.title}
+        </p>
+        <p className="text-h4 text-primary-black font-link">
+          {data?.data?.authors}
+        </p>
         <p className="text-h4 font-h4 text-black">Brief Summary</p>
         <p className="text-p text-black text-justify">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
@@ -36,10 +52,17 @@ export default function BookDescription() {
               />
             ))}
             <p className="text-primary-black text-p capitalize">
-              4.5(1245 Ratings)
+              {data?.data?.average_rating}({data?.data?.ratings_count} Ratings)
             </p>
           </div>
-          <p className="text-p text-primary-black font-link">Rs. 200</p>
+          <div className="flex flex-row gap-8">
+            <p className="text-p text-primary-black font-link">
+              Published On: {data?.data?.original_publication_year}
+            </p>
+            <p className="text-p text-red-600 font-link capitalize">
+              Language: {data?.data?.language_code}
+            </p>
+          </div>
         </div>
       </div>
     </div>

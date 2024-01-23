@@ -10,29 +10,42 @@ const Tag = ({ text }: { text: string }) => {
     </p>
   );
 };
-export default function BookCard() {
+interface Book {
+  date: string;
+  title: string;
+  author: string;
+  rating: string;
+  image: string;
+  language: string;
+  id: string;
+}
+export default function BookCard({
+  date,
+  title,
+  author,
+  rating,
+  image,
+  language,
+  id
+}: Book) {
   const navigate = useRouter();
   return (
     <div
-      className="py-12 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-max px-6 cursor-pointer"
-      onClick={() => navigate.push(routes.book.singleBook(1))}
+      className="py-12 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer"
+      onClick={() => navigate.push(routes.book.singleBook(id))}
     >
       <div className="p-2 bg-blue-100 relative rounded-full flex items-end flex-col w-[220px] h-max justify-center">
         <div className="flex flex-col gap-2 absolute top-10 left-0">
-          <Tag text="Rs. 200" />
-          <Tag text="4.5" />
+          <Tag text={date} />
+          <Tag text={rating} />
         </div>
 
-        <Image
-          src="/images/book.png"
-          alt="book image"
-          width={120}
-          height={192}
-        />
+        <Image src={image} alt="book image" width={120} height={192} />
       </div>
       <div className="pt-4">
-        <p className="text-gray-800 text-h6 font-h1">Book Name</p>
-        <p className="text-p-sm text-primary-dark">Author Name</p>
+        <p className="text-gray-800 text-h6 font-h1">{title}</p>
+        <p className="text-p-sm text-primary-dark">{author}</p>
+        <p className="text-p-sm text-red-600 capitalize">{language}</p>
       </div>
     </div>
   );

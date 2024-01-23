@@ -9,6 +9,7 @@ interface MetaTagsConfig {
   mainPage: MetaTags;
   books: MetaTags;
   singleBook: MetaTags;
+  saveBooks: MetaTags
 }
 
 export const MetaTags: MetaTagsConfig = {
@@ -29,6 +30,10 @@ export const MetaTags: MetaTagsConfig = {
   },
   books: {
     title: "reaDRadar | Recommended Books",
+    description: "Discover the latest book adn most popular books on reaDRadar",
+  },
+  saveBooks: {
+    title: "reaDRadar | Save Books",
     description: "Discover the latest book adn most popular books on reaDRadar",
   },
   singleBook: {

@@ -12,8 +12,10 @@ import FormHeader from "@/components/common/text/form-header";
 import LinkTag from "@/components/common/text/link";
 import { LoginPayload } from "./login-interface";
 import { useRouter } from "next/navigation";
-import { get_fetch } from "@/api/api-provider";
+import { get_fetch, postRequest } from "@/api/api-provider";
 import { Auth } from "@/api/routes";
+import useSWRMutation from "swr/mutation";
+import { loginPostRequest } from "./login-post-api";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("User name is required"),
@@ -21,6 +23,15 @@ const validationSchema = Yup.object({
 });
 
 const LoginForm = () => {
+  // const {
+  //   data,
+  //   trigger: _loginCallTrigger,
+  //   error: _loginCallError,
+  // } = useSWRMutation(Auth._login(), loginPostRequest);
+  const { data: authSucessData, trigger: _authSuccess } = useSWRMutation(
+    Auth._authSuccess(),
+    get_fetch
+  );
   const navigate = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -30,14 +41,13 @@ const LoginForm = () => {
     validationSchema: validationSchema,
 
     onSubmit: async (values: LoginPayload) => {
-      // Handle form submission here
+      // await _authSuccess(values as any);
       let response = await get_fetch(Auth._authSuccess());
       if (response) {
         localStorage.setItem("token", response?.token);
         localStorage.setItem("user", JSON.stringify(response?.user));
         navigate.replace("/");
       }
-      console.log(response);
     },
   });
 
