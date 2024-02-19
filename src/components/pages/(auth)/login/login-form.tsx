@@ -1,21 +1,22 @@
 "use client";
 
-import React from "react";
-import { useFormik } from "formik";
+import React, { useEffect } from "react";
 import * as Yup from "yup";
+import { useFormik } from "formik";
 import { routes } from "@/contants/routes";
-
 import InputComponent from "@/components/common/input/input";
 import ButtonComponent from "@/components/common/button/button";
 import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
 import LinkTag from "@/components/common/text/link";
-import { LoginPayload } from "./login-interface";
 import { useRouter } from "next/navigation";
-import { get_fetch, postRequest } from "@/api/api-provider";
-import { Auth } from "@/api/routes";
-import useSWRMutation from "swr/mutation";
-import { loginPostRequest } from "./login-post-api";
+import {
+  useGetTokenQuery,
+  useLoginMutation,
+} from "@/store/features/auth/auth.api";
+import { LoginFormInterface } from "@/store/features/auth/auth.interface";
+import { setCookie } from "cookies-next";
+import { session } from "@/contants/token";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("User name is required"),
@@ -23,16 +24,24 @@ const validationSchema = Yup.object({
 });
 
 const LoginForm = () => {
-  // const {
-  //   data,
-  //   trigger: _loginCallTrigger,
-  //   error: _loginCallError,
-  // } = useSWRMutation(Auth._login(), loginPostRequest);
-  const { data: authSucessData, trigger: _authSuccess } = useSWRMutation(
-    Auth._authSuccess(),
-    get_fetch
-  );
+  const [loginApiCall] = useLoginMutation();
+  const {
+    data: tokenData,
+    error: tokenError,
+    isLoading: tokenLoading,
+  } = useGetTokenQuery();
+  console.log(tokenData);
   const navigate = useRouter();
+  useEffect(() => {
+    if (tokenData?.token && tokenData?.user) {
+      console.log(tokenData);
+      setCookie(session.token, tokenData?.token);
+      setCookie(session.user, JSON.stringify(tokenData?.user));
+      navigate.replace("/");
+    } else {
+      console.log("error");
+    }
+  }, [tokenData]);
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -40,14 +49,8 @@ const LoginForm = () => {
     },
     validationSchema: validationSchema,
 
-    onSubmit: async (values: LoginPayload) => {
-      // await _authSuccess(values as any);
-      let response = await get_fetch(Auth._authSuccess());
-      if (response) {
-        localStorage.setItem("token", response?.token);
-        localStorage.setItem("user", JSON.stringify(response?.user));
-        navigate.replace("/");
-      }
+    onSubmit: async (values: LoginFormInterface) => {
+      await loginApiCall(values);
     },
   });
 

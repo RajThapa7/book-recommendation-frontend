@@ -2,6 +2,12 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { routes } from "@/contants/routes";
+import ButtonComponent from "@/components/common/button/button";
+import {
+  useAddBookToListMutation,
+  useRemoveSavedBookFromListMutation,
+} from "@/store/features/book/book.api";
+import { getUser } from "@/lib/getUser";
 
 const Tag = ({ text }: { text: string }) => {
   return (
@@ -18,6 +24,8 @@ interface Book {
   image: string;
   language: string;
   id: string;
+  removeBtn?: boolean;
+  addBtn?: boolean;
 }
 export default function BookCard({
   date,
@@ -26,12 +34,20 @@ export default function BookCard({
   rating,
   image,
   language,
-  id
+  id,
+  removeBtn,
+  addBtn,
 }: Book) {
+  const [addBookToSave] = useAddBookToListMutation();
+  const [removeBookFromSave] = useRemoveSavedBookFromListMutation();
   const navigate = useRouter();
+  const handleSaveBook = () => {
+    addBookToSave({ book_id: id, user_id: getUser()._id });
+  };
+  const handleRemoveBook = () => {};
   return (
     <div
-      className="py-12 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer"
+      className="py-10 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer"
       onClick={() => navigate.push(routes.book.singleBook(id))}
     >
       <div className="p-2 bg-blue-100 relative rounded-full flex items-end flex-col w-[220px] h-max justify-center">
@@ -46,6 +62,24 @@ export default function BookCard({
         <p className="text-gray-800 text-h6 font-h1">{title}</p>
         <p className="text-p-sm text-primary-dark">{author}</p>
         <p className="text-p-sm text-red-600 capitalize">{language}</p>
+      </div>
+      <div className="mt-2">
+        {!addBtn && (
+          <ButtonComponent
+            text="Save Book"
+            type="button"
+            size="text-[12px]"
+            btnClick={handleSaveBook}
+          />
+        )}
+        {removeBtn && (
+          <ButtonComponent
+            text="Remove"
+            type="button"
+            size="text-[12px]"
+            bgColor="border-red bg-red-600"
+          />
+        )}
       </div>
     </div>
   );

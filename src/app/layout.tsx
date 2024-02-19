@@ -1,3 +1,4 @@
+import ProvidersWrapper from "@/context/wrapper";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -16,9 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={["h-full w-full", inter.className].join(" ")}>
-        {children}
-      </body>
+      <ProvidersWrapper>
+        <body className={["h-full w-full", inter.className].join(" ")}>
+          {children}
+        </body>
+      </ProvidersWrapper>
     </html>
   );
 }

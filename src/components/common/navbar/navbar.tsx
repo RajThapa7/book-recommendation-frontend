@@ -4,19 +4,17 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { routes } from "@/contants/routes";
 import { getToken } from "@/lib/getToken";
-import useSWRMutation from "swr/mutation";
-import { Auth } from "@/api/routes";
-import { postRequest } from "@/api/api-provider";
+import { useLogoutMutation } from "@/store/features/auth/auth.api";
+import { deleteCookie } from "cookies-next";
+import { session } from "@/contants/token";
 
 export default function Navbar() {
   const router = useRouter();
-  const { data: logout, trigger: _authLogout } = useSWRMutation(
-    Auth._logout(),
-    postRequest
-  );
+  const [logoutApiCall] = useLogoutMutation();
   const logoutHandler = async () => {
-    await _authLogout();
-    localStorage.clear();
+    await logoutApiCall();
+    deleteCookie(session.token);
+    deleteCookie(session.user);
     router.replace(routes.auth.login);
   };
   return (

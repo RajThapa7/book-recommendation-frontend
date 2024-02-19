@@ -5,31 +5,27 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+import { routes } from "@/contants/routes";
+import { SignUpFormInterface } from "@/store/features/auth/auth.interface";
+import { useSignupMutation } from "@/store/features/auth/auth.api";
 import InputComponent from "@/components/common/input/input";
 import ButtonComponent from "@/components/common/button/button";
 import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
 import LinkTag from "@/components/common/text/link";
-import { routes } from "@/contants/routes";
-import useSWRMutation from "swr/mutation";
-import { Auth } from "@/api/routes";
-import { SignUpPostRequest } from "./signup-post-api";
+import { useRouter } from "next/navigation";
 
 const validationSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
   password: Yup.string().required("Password is required"),
-  name: Yup.string().required("Name is required"),
+  username: Yup.string().required("User name is required"),
 });
 
 const SignUpForm = () => {
-  const {
-    data,
-    trigger: _signUpCallTrigger,
-    error: _signUpCallError,
-  } = useSWRMutation(Auth._register(), SignUpPostRequest);
-
+  const navigate = useRouter();
+  const [signupApiCall] = useSignupMutation();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -37,9 +33,16 @@ const SignUpForm = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
-      console.log(values)
-      await _signUpCallTrigger(values);
+    onSubmit: async (values: SignUpFormInterface) => {
+      console.log(values);
+      const response = await signupApiCall(values);
+      console.log(response);
+      if (response.user) {
+        console.log("success");
+        navigate.replace(routes.auth.login);
+      } else {
+        console.log("error");
+      }
     },
   });
 
@@ -53,7 +56,7 @@ const SignUpForm = () => {
           <InputComponent
             type="text"
             placeholder="Enter your username"
-            id="name"
+            id="username"
             name="username"
             label="User Name"
             onChange={formik.handleChange}

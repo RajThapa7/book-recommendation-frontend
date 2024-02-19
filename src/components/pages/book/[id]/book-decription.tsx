@@ -1,20 +1,14 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import useSWR from "swr";
-import { Book } from "@/api/routes";
-import { get_fetch } from "@/api/api-provider";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useGetBookByIdQuery } from "@/store/features/book/book.api";
 
 export default function BookDescription() {
   const path = usePathname();
-  const { data, isLoading, error } = useSWR(
-    Book._getBookById(path?.replace("/books/", "")),
-    get_fetch,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const { data, isLoading, error } = useGetBookByIdQuery({
+    id: path?.replace("/books/", ""),
+  });
   return (
     <div className="flex flex-row gap-10 items-center">
       <Image

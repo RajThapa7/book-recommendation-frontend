@@ -1,6 +1,7 @@
+import { session } from "@/contants/token";
+import { getCookie } from "cookies-next";
+
 export const getToken = () => {
-  if (typeof window !== undefined) {
-    return localStorage.getItem("token");
-  }
-  return null;
+  const token: string | null | undefined = getCookie(session.token);
+  return token;
 };
