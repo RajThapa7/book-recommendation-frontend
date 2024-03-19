@@ -11,7 +11,7 @@ import {
   useGetBookRecommendationsQuery,
   useGetSearchedBooksQuery,
 } from "@/store/features/book/book.api";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import PaginationComponent from "@/components/common/pagination/pagination";
 
 const validationSchema = Yup.object({
@@ -89,6 +89,7 @@ export default function BookComponent() {
               language={p?.language_code}
               date={p?.original_publication_year}
               id={p?._id}
+              bookId={p?.id}
             />
           ))
         ) : (
@@ -115,6 +116,7 @@ export default function BookComponent() {
             language={p?.language_code}
             date={p?.original_publication_year}
             id={p?._id}
+            bookId={p?.id}
           />
         ))}
       </div>

@@ -27,6 +27,7 @@ export default function SaveBookComponent() {
             language={p?.language_code}
             date={p?.original_publication_year}
             id={p?._id}
+            bookId={p?.id}
             removeBtn
             addBtn
           />

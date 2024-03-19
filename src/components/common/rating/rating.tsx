@@ -17,7 +17,6 @@ export default function Rating({ value, onChange, disabled }: RatingProps) {
         value={value}
         disabled={disabled}
       />
-      {value ? <span>{desc[value - 1]}</span> : null}
     </Flex>
   );
 }

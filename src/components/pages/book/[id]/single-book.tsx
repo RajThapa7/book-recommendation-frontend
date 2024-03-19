@@ -6,7 +6,6 @@ import BackButton from "@/components/common/button/back-button";
 import SectionTitle from "@/components/common/text/section-title";
 import { useGetBookRecommendationsQuery } from "@/store/features/book/book.api";
 import { useSelector } from "react-redux";
-import ButtonComponent from "@/components/common/button/button";
 
 export default function SingleBookComponent() {
   const userData = useSelector((state: any) => state?.userInfo?.userInfo);
@@ -36,6 +35,7 @@ export default function SingleBookComponent() {
               language={p?.language_code}
               date={p?.original_publication_year}
               id={p?._id}
+              bookId={p?.id}
             />
           ))}
         </div>

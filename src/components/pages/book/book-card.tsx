@@ -1,14 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { routes } from "@/contants/routes";
 import ButtonComponent from "@/components/common/button/button";
-import {
-  useAddBookToListMutation,
-  useRemoveSavedBookFromListMutation,
-} from "@/store/features/book/book.api";
+import { useAddBookToListMutation } from "@/store/features/book/book.api";
 import { getUser } from "@/lib/getUser";
-import { Button, Tooltip, message } from "antd";
+import { Button, message } from "antd";
+import { getCookie } from "cookies-next";
 
 const Tag = ({ text }: { text: string }) => {
   return (
@@ -27,6 +25,7 @@ interface Book {
   id: string;
   removeBtn?: boolean;
   addBtn?: boolean;
+  bookId?: number | string;
 }
 export default function BookCard({
   date,
@@ -38,19 +37,21 @@ export default function BookCard({
   id,
   removeBtn,
   addBtn,
+  bookId,
 }: Book) {
+  const searchParams = useSearchParams();
   const [messageApi, contextHolder] = message.useMessage();
   const [addBookToSave] = useAddBookToListMutation();
   const navigate = useRouter();
   const handleSaveBook = async () => {
-    await addBookToSave({ book_id: id, user_id: getUser()._id });
+    await addBookToSave({
+      book_id: id,
+      user_id: JSON.parse(getCookie("user")!)?.userId?.toString(),
+    });
     messageApi.success("Book added to list");
   };
   return (
-    <div
-      className="py-10 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer relative"
-      onClick={() => navigate.push(routes.book.singleBook(id))}
-    >
+    <div className="py-10 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer relative">
       <div className="p-2 bg-blue-100 relative rounded-full flex items-end flex-col w-[220px] h-max justify-center">
         <div className="flex flex-col gap-2 absolute top-10 left-0">
           <Tag text={date} />
@@ -59,7 +60,11 @@ export default function BookCard({
 
         <Image src={image} alt="book image" width={120} height={192} />
       </div>
-      <div className="pt-4">
+      <div className="pt-4"
+       onClick={() =>
+         navigate.push(routes.book.singleBook(id) + "?bookId=" + bookId)
+       }
+      >
         <p className="text-gray-800 text-h6 font-h1">{title}</p>
         <p className="text-p-sm text-primary-dark">{author}</p>
         <p className="text-p-sm text-red-600 capitalize">{language}</p>

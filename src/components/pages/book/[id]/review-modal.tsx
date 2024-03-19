@@ -5,7 +5,7 @@ import Rating from "@/components/common/rating/rating";
 import TextArea from "antd/es/input/TextArea";
 import { useAddRatingToBookMutation } from "@/store/features/ratings/rating.api";
 import { getCookie } from "cookies-next";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface ModalProps {
   isModalOpen: boolean;
@@ -13,6 +13,7 @@ interface ModalProps {
 }
 export default function ReviewModal({ isModalOpen, handleCancel }: ModalProps) {
   const [rate, setRate] = useState<number>(0);
+  const searchParams = useSearchParams();
   const [bookReview, setBookReview] = useState<string>("");
   const path = usePathname();
   const [messageApi, contextHolder] = message.useMessage();
@@ -20,7 +21,7 @@ export default function ReviewModal({ isModalOpen, handleCancel }: ModalProps) {
   const handleReview = () => {
     messageApi.success("Thank you for your review");
     reviewMutation({
-      bookId: path?.replace("/books/", ""),
+      bookId: searchParams?.get("bookId") as string,
       userId: JSON.parse(getCookie("user")!)?.userId,
       rating: rate,
       review: bookReview,

@@ -24,4 +24,4 @@ export const ratingApi = createApi({
   }),
 });
 
-export const { useAddRatingToBookMutation,useGetUserRatingOnBookQuery} = ratingApi;
+export const { useAddRatingToBookMutation, useGetUserRatingOnBookQuery } = ratingApi;

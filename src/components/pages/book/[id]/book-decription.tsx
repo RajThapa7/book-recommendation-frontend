@@ -6,8 +6,7 @@ import { useGetBookByIdQuery } from "@/store/features/book/book.api";
 import ButtonComponent from "@/components/common/button/button";
 import Rating from "@/components/common/rating/rating";
 import ReviewModal from "./review-modal";
-import { useGetUserRatingOnBookQuery } from "@/store/features/ratings/rating.api";
-import { getCookie } from "cookies-next";
+import ReviewSection from "./review-section";
 
 export default function BookDescription() {
   const [modal, setModal] = useState<boolean>(false);
@@ -17,11 +16,7 @@ export default function BookDescription() {
   const { data } = useGetBookByIdQuery({
     id: path?.replace("/books/", ""),
   });
-  const { data: userReviewData } = useGetUserRatingOnBookQuery({
-    userId: JSON.parse(getCookie("user")!)?.userId,
-    bookId: path?.replace("/books/", ""),
-  });
-  console.log(userReviewData);
+
   return (
     <div className="flex flex-row gap-10 items-center flex-wrap">
       <Image
@@ -73,6 +68,7 @@ export default function BookDescription() {
           />
         </div>
       </div>
+      <ReviewSection />
       <ReviewModal handleCancel={() => setModal(false)} isModalOpen={modal} />
     </div>
   );

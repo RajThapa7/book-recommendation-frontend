@@ -35,7 +35,7 @@ export const endpoints = {
     getBookById: (id: number | string): string => "/books/" + id,
     getSavedList: (id: number | string): string => "/list/" + id,
     getUserRatingOnBook: ({ userId, bookId }: GetBookRatingInterface) =>
-      `/ratings/${userId}/13`,
+      `/ratings/${userId}/${bookId}`,
     addBookToList: "/list/add-book",
     addRatingToBook: "/ratings/add",
     removeBookFromList: ({ id, book_id }: { id: string; book_id: string }) =>
