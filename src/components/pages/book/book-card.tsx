@@ -8,6 +8,7 @@ import {
   useRemoveSavedBookFromListMutation,
 } from "@/store/features/book/book.api";
 import { getUser } from "@/lib/getUser";
+import { Button, Tooltip, message } from "antd";
 
 const Tag = ({ text }: { text: string }) => {
   return (
@@ -38,16 +39,16 @@ export default function BookCard({
   removeBtn,
   addBtn,
 }: Book) {
+  const [messageApi, contextHolder] = message.useMessage();
   const [addBookToSave] = useAddBookToListMutation();
-  const [removeBookFromSave] = useRemoveSavedBookFromListMutation();
   const navigate = useRouter();
-  const handleSaveBook = () => {
-    addBookToSave({ book_id: id, user_id: getUser()._id });
+  const handleSaveBook = async () => {
+    await addBookToSave({ book_id: id, user_id: getUser()._id });
+    messageApi.success("Book added to list");
   };
-  const handleRemoveBook = () => {};
   return (
     <div
-      className="py-10 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer"
+      className="py-10 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer relative"
       onClick={() => navigate.push(routes.book.singleBook(id))}
     >
       <div className="p-2 bg-blue-100 relative rounded-full flex items-end flex-col w-[220px] h-max justify-center">
@@ -65,12 +66,15 @@ export default function BookCard({
       </div>
       <div className="mt-2">
         {!addBtn && (
-          <ButtonComponent
-            text="Save Book"
-            type="button"
-            size="text-[12px]"
-            btnClick={handleSaveBook}
-          />
+          <div className="flex justify-center">
+            <Button
+              onClick={handleSaveBook}
+              className="flex flex-row items-center gap-2 border-blue-700 text-blue-700 hover:border-blue-700 hover:text-blue-700 absolute bottom-4"
+            >
+              <HeartIcon />
+              Add Book
+            </Button>
+          </div>
         )}
         {removeBtn && (
           <ButtonComponent
@@ -81,6 +85,28 @@ export default function BookCard({
           />
         )}
       </div>
+      {contextHolder}
     </div>
   );
 }
+const HeartIcon = () => {
+  return (
+    <svg
+      className="w-6 h-6 text-gray-800 dark:text-blue-800"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
+      />
+    </svg>
+  );
+};

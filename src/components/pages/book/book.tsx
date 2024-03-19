@@ -9,39 +9,45 @@ import Option from "@/components/common/input/option-input";
 import SectionTitle from "@/components/common/text/section-title";
 import {
   useGetBookRecommendationsQuery,
-  useGetBooksQuery,
   useGetSearchedBooksQuery,
 } from "@/store/features/book/book.api";
+import {  useSelector } from "react-redux";
+import PaginationComponent from "@/components/common/pagination/pagination";
 
 const validationSchema = Yup.object({
   search: Yup.string().required("Please enter search text"),
 });
 export default function BookComponent() {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageLimitCount, setPageLimitCount] = useState<number>(10);
+
+  const user_data = useSelector((state: any) => state?.userInfo?.userInfo);
   const formik = useFormik({
     initialValues: {
       search: "",
-      optionValue: "",
+      optionValue: "sort-average-rating",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log(values);
     },
   });
 
-  const { data, error, isLoading } = useGetSearchedBooksQuery({
+  const { data, refetch } = useGetSearchedBooksQuery({
     search: formik?.values?.search,
     optionValue: formik?.values?.optionValue,
+    page: currentPage?.toString(),
+    limit: pageLimitCount?.toString(),
   });
-
-  const {
-    data: recommendedBooks,
-    isLoading: isRecommendationLoading,
-    error: RecommendationError,
-  } = useGetBookRecommendationsQuery({ id: 1 });
-
+  const { data: recommendedBooks } = useGetBookRecommendationsQuery({
+    id: user_data?.userId,
+  });
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    refetch();
+  };
   return (
-    <div className="flex flex-col gap-6 w-4/5 mx-auto  py-24 ">
+    <div className="flex flex-col gap-6 w-4/5 mx-auto  py-24 book-container">
       <SectionTitle
         className="text-center pb-10"
         text="Find your next adventure in books with our personalized
@@ -64,12 +70,13 @@ export default function BookComponent() {
           )}
         </form>
         <Option
+          value={formik.values.optionValue}
           onChangeHandler={(target: any) =>
             formik.setFieldValue("optionValue", target?.target?.value)
           }
         />
       </div>
-      <SectionTitle text="Check out our new collection" className="text-h4" />
+      <SectionTitle text="Check out our collection" className="text-h4" />
       <div className="flex flex-wrap gap-12">
         {data?.data?.length > 0 ? (
           data?.data?.map((p: any, index: number) => (
@@ -91,6 +98,11 @@ export default function BookComponent() {
           </p>
         )}
       </div>
+      <PaginationComponent
+        total={data?.totalPages}
+        defaultCurrent={1}
+        onChange={handlePageChange}
+      />
       <SectionTitle text="Our Recommendations" className="text-h4" />
       <div className="flex flex-wrap gap-12">
         {recommendedBooks?.data?.map((p: any, index: number) => (

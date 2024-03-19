@@ -25,21 +25,13 @@ const validationSchema = Yup.object({
 
 const LoginForm = () => {
   const [loginApiCall] = useLoginMutation();
-  const {
-    data: tokenData,
-    error: tokenError,
-    isLoading: tokenLoading,
-  } = useGetTokenQuery();
-  console.log(tokenData);
+  const { data: tokenData } = useGetTokenQuery();
   const navigate = useRouter();
   useEffect(() => {
     if (tokenData?.token && tokenData?.user) {
-      console.log(tokenData);
       setCookie(session.token, tokenData?.token);
       setCookie(session.user, JSON.stringify(tokenData?.user));
-      navigate.replace("/");
-    } else {
-      console.log("error");
+      navigate.replace("/books");
     }
   }, [tokenData]);
   const formik = useFormik({
@@ -50,17 +42,16 @@ const LoginForm = () => {
     validationSchema: validationSchema,
 
     onSubmit: async (values: LoginFormInterface) => {
-      await loginApiCall(values);
+      const response = await loginApiCall(values);
+      if (response.error?.status !== 400) {
+        window.location.reload();
+      }
     },
   });
 
   return (
     <div className="w-[350px] mx-auto h-full justify-center flex flex-col">
-      <p className="text-p-sm font-p text-center">
-        Not registered?{" "}
-        <LinkTag link={routes?.auth?.signup} text="Create an account" />
-      </p>
-      <div className="text-center pt-8 pb-5">
+      <div className="text-center pb-5">
         <p className="text-center text-grey text-p">Welcome back!</p>
         <FormHeader text="Login to your account" key={"login-header-text"} />
       </div>
@@ -97,6 +88,10 @@ const LoginForm = () => {
         </div>
         <ButtonComponent text="Login" key={"login-btn"} type="submit" />
       </form>
+      <p className="text-p-sm font-p text-center mt-4">
+        Not registered?{" "}
+        <LinkTag link={routes?.auth?.signup} text="Create an account" />
+      </p>
     </div>
   );
 };

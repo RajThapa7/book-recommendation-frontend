@@ -1,18 +1,24 @@
 import React from "react";
+import { Select } from "antd";
 interface Props {
   onChangeHandler: (value: any) => void;
+  value: string;
 }
-export default function Option({ onChangeHandler }: Props) {
+export default function Option({ onChangeHandler, value }: Props) {
   return (
-    <div className="flex flex-row gap-2 items-center">
+    <div className="flex flex-row gap-2 items-center sort-by">
       <p className="text-link font-link text-black">Sort By</p>
-      <select className="cursor-pointer" onChange={onChangeHandler}>
-        <option value={"no"}>Select Filter By</option>
-        <option value={"order-asc"}>Ascending Order</option>
-        <option value={"order-desc"}>Descending Order</option>
-        <option value={"sort-average_rating"}>Top Rated</option>
-        <option value={"average_rating->=3"}>Rating Greater than 3</option>
-      </select>
+      <Select
+        className="cursor-pointer w-44"
+        onChange={onChangeHandler}
+        value={value}
+        options={[
+          { value: "average-rating->=3", label: "Rating Greater than 3" },
+          { value: "order-asc", label: "Ascending Order" },
+          { value: "order-desc", label: "Descending Order" },
+          { value: "sort-average-rating", label: "Top Rated" },
+        ]}
+      />
     </div>
   );
 }

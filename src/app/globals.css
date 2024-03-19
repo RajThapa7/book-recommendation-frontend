@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@media (max-width: 775px) {
+  .sort-by {
+    display: none;
+  }
+}
+@media (max-width: 400px) {
+  .search-input {
+    flex: 1;
+  }
+  .book-container {
+    padding: 30px 15px;
+    width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .large-screen-nav {
+    display: none;
+  }
+  .nav-header {
+    padding: 1.5rem 20px;
+  }
+  .footer {
+    width: 100%;
+    padding: 1.5rem 20px;
+  }
+  .breadcrumb {
+    display: flex;
+  }
+}

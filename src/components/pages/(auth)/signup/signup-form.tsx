@@ -34,14 +34,10 @@ const SignUpForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values: SignUpFormInterface) => {
-      console.log(values);
       const response = await signupApiCall(values);
       console.log(response);
-      if (response.user) {
-        console.log("success");
+      if (response?.data?.user) {
         navigate.replace(routes.auth.login);
-      } else {
-        console.log("error");
       }
     },
   });

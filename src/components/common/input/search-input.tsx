@@ -11,7 +11,7 @@ export default function SearchInput({
   return (
     <div className="flex flex-row gap-2 items-end">
       <input
-        className="text-p text-grey font-p bg-white w-80 px-2 py-3 pr-0 outline-none border-b border-solid border-black"
+        className="text-p text-grey font-p bg-white w-80 px-2 py-3 pr-0 outline-none border-b border-solid border-black search-input"
         type="text"
         value={value}
         name={name}

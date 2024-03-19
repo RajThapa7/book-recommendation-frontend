@@ -1,18 +1,31 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useGetBookByIdQuery } from "@/store/features/book/book.api";
+import ButtonComponent from "@/components/common/button/button";
+import Rating from "@/components/common/rating/rating";
+import ReviewModal from "./review-modal";
+import { useGetUserRatingOnBookQuery } from "@/store/features/ratings/rating.api";
+import { getCookie } from "cookies-next";
 
 export default function BookDescription() {
+  const [modal, setModal] = useState<boolean>(false);
   const path = usePathname();
-  const { data, isLoading, error } = useGetBookByIdQuery({
+  let defaultImage =
+    "https://images.unsplash.com/photo-1594026200204-a25bea256816?q=80&w=2946&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+  const { data } = useGetBookByIdQuery({
     id: path?.replace("/books/", ""),
   });
+  const { data: userReviewData } = useGetUserRatingOnBookQuery({
+    userId: JSON.parse(getCookie("user")!)?.userId,
+    bookId: path?.replace("/books/", ""),
+  });
+  console.log(userReviewData);
   return (
-    <div className="flex flex-row gap-10 items-center">
+    <div className="flex flex-row gap-10 items-center flex-wrap">
       <Image
-        src={data?.data?.image_url}
+        src={data?.data?.image_url ?? defaultImage}
         alt="book-image"
         className="rounded-lg w-[290px] h-[470px]"
         width={290}
@@ -36,15 +49,7 @@ export default function BookDescription() {
         </p>
         <div className="flex flex-row justify-between">
           <div className="flex flex-row gap-1">
-            {Array.from({ length: 5 }).map((_, index: number) => (
-              <Image
-                src="/icons/rating-icon.svg"
-                width={15}
-                height={15}
-                key={index}
-                alt="rating icon"
-              />
-            ))}
+            <Rating value={data?.data?.average_rating} disabled />
             <p className="text-primary-black text-p capitalize">
               {data?.data?.average_rating}({data?.data?.ratings_count} Ratings)
             </p>
@@ -58,7 +63,17 @@ export default function BookDescription() {
             </p>
           </div>
         </div>
+        <div>
+          <ButtonComponent
+            text="Write a Review"
+            type="button"
+            size="text-[12px]"
+            bgColor="bg-primary-black"
+            btnClick={() => setModal(true)}
+          />
+        </div>
       </div>
+      <ReviewModal handleCancel={() => setModal(false)} isModalOpen={modal} />
     </div>
   );
 }

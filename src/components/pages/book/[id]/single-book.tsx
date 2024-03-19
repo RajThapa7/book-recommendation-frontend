@@ -1,27 +1,25 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import BookDescription from "./book-decription";
 import BookCard from "../book-card";
 import BackButton from "@/components/common/button/back-button";
 import SectionTitle from "@/components/common/text/section-title";
-import { useSearchParams } from "next/navigation";
 import { useGetBookRecommendationsQuery } from "@/store/features/book/book.api";
+import { useSelector } from "react-redux";
+import ButtonComponent from "@/components/common/button/button";
 
 export default function SingleBookComponent() {
-  const search = useSearchParams();
-  console.log(search);
-  const {
-    data,
-    isLoading: isRecommendationLoading,
-    error: RecommendationError,
-  } = useGetBookRecommendationsQuery({ id: 1 });
-
+  const userData = useSelector((state: any) => state?.userInfo?.userInfo);
+  const { data } = useGetBookRecommendationsQuery({
+    id: userData?.userId,
+  });
   return (
     <div className="mx-auto w-4/5 flex flex-col gap-12 py-16">
-      <div className="flex flex-col gap-2 items-start">
+      <div className="flex flex-col gap-2 items-start flex-wrap w-full">
         <BackButton />
         <BookDescription />
       </div>
+
       <div className="flex flex-col gap-6">
         <SectionTitle
           text="More Similar Books Await Your Discovery "
