@@ -1,4 +1,5 @@
 "use client";
+import BookSkeletal from "@/components/common/BookSkeletal/BookSkeletal";
 import Option from "@/components/common/input/option-input";
 import SearchInput from "@/components/common/input/search-input";
 import PaginationComponent from "@/components/common/pagination/pagination";
@@ -30,7 +31,7 @@ const Collection = () => {
       // Handle form submission here
     },
   });
-  const { data, refetch } = useGetSearchedBooksQuery({
+  const { data, refetch, isLoading } = useGetSearchedBooksQuery({
     search: formik?.values?.search,
     optionValue: formik?.values?.optionValue,
     page: currentPage?.toString(),
@@ -39,6 +40,11 @@ const Collection = () => {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+    refetch();
+  };
+
+  const handlePageSizeChange = (_: number, count: number) => {
+    setPageLimitCount(count);
     refetch();
   };
   return (
@@ -67,32 +73,30 @@ const Collection = () => {
         />
       </div>
       <SectionTitle text="Our Books Collection" className="text-h4" />
-      <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {data?.data?.length > 0 ? (
-          data?.data?.map((p: any, index: number) => (
-            <BookCard
-              key={index + "recommend"}
-              title={p?.title}
-              rating={p?.average_rating}
-              image={p?.image_url}
-              author={p?.authors}
-              language={p?.language_code}
-              date={p?.original_publication_year}
-              id={p?._id}
-              bookId={p?.id}
-            />
-          ))
-        ) : (
-          <p className="text-center text-black text-2xl">
-            No results found with your search keyword:{" "}
-            <span className="text-red-600">"{formik.values?.search}"</span>
-          </p>
-        )}
+      <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+        {!isLoading
+          ? data?.data?.map((p: any, index: number) => (
+              <BookCard
+                key={index + "recommend"}
+                title={p?.title}
+                rating={p?.average_rating}
+                image={p?.image_url}
+                author={p?.authors}
+                language={p?.language_code}
+                date={p?.original_publication_year}
+                id={p?._id}
+                bookId={p?.id}
+              />
+            ))
+          : Array.from({ length: 4 }).map((_, index) => (
+              <BookSkeletal key={index} />
+            ))}
       </div>
       <PaginationComponent
-        total={data?.totalPages}
+        total={data?.totalCount}
         defaultCurrent={1}
         onChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
       />
     </div>
   );

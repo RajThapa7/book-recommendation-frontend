@@ -49,8 +49,8 @@ export default function BookCard({
     messageApi.success("Book added to list");
   };
   return (
-    <div className="py-10 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer relative">
-      <div className="p-2 bg-blue-100 relative rounded-full flex items-end flex-col w-[220px] h-max justify-center">
+    <div className="py-10 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer relative h-full">
+      <div className="p-2 bg-blue-100 relative rounded-full flex items-end flex-col w-[220px] justify-center">
         <div className="flex flex-col gap-2 absolute top-10 left-0">
           <Tag text={date} />
           <Tag text={rating} />
