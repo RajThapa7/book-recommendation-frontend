@@ -1,11 +1,9 @@
 "use client";
-import React, { useEffect } from "react";
-import BookDescription from "./book-decription";
-import BookCard from "../book-card";
-import BackButton from "@/components/common/button/back-button";
 import SectionTitle from "@/components/common/text/section-title";
 import { useGetBookRecommendationsQuery } from "@/store/features/book/book.api";
 import { useSelector } from "react-redux";
+import BookCard from "../book-card";
+import BookDescription from "./book-decription";
 
 export default function SingleBookComponent() {
   const userData = useSelector((state: any) => state?.userInfo?.userInfo);
@@ -15,7 +13,6 @@ export default function SingleBookComponent() {
   return (
     <div className="mx-auto w-4/5 flex flex-col gap-12 py-16">
       <div className="flex flex-col gap-2 items-start flex-wrap w-full">
-        <BackButton />
         <BookDescription />
       </div>
 

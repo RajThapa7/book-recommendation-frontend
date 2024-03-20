@@ -20,7 +20,9 @@ export default function BookLayout({
   return (
     <>
       <Navbar />
-      {children}
+      <div className="flex flex-col gap-6 w-4/5 mx-auto  py-24 book-container">
+        {children}
+      </div>
       <Footer />
     </>
   );

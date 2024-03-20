@@ -1,18 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import BookCard from "./book-card";
-import SearchInput from "@/components/common/input/search-input";
-import ErrorMessage from "@/components/common/text/error-message";
-import Option from "@/components/common/input/option-input";
+import ButtonComponent from "@/components/common/button/button";
 import SectionTitle from "@/components/common/text/section-title";
 import {
   useGetBookRecommendationsQuery,
   useGetSearchedBooksQuery,
 } from "@/store/features/book/book.api";
+import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import PaginationComponent from "@/components/common/pagination/pagination";
+import * as Yup from "yup";
+import BookCard from "./book-card";
 
 const validationSchema = Yup.object({
   search: Yup.string().required("Please enter search text"),
@@ -46,52 +44,33 @@ export default function BookComponent() {
     setCurrentPage(pageNumber);
     refetch();
   };
+  const router = useRouter();
   return (
-    <div className="flex flex-col gap-6 w-4/5 mx-auto  py-24 book-container">
+    <div className="">
       <SectionTitle
         className="text-center pb-10"
         text="Find your next adventure in books with our personalized
           recommendations."
       ></SectionTitle>
-      <div className="flex justify-between items-end pt-4 pb-10">
-        <form
-          onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-1 w-max"
-        >
-          <SearchInput
-            name="search"
-            id="search"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.search}
-          />
-          {formik.touched.search && formik.errors.search && (
-            <ErrorMessage text={formik.errors.search}></ErrorMessage>
-          )}
-        </form>
-        <Option
-          value={formik.values.optionValue}
-          onChangeHandler={(target: any) =>
-            formik.setFieldValue("optionValue", target?.target?.value)
-          }
-        />
-      </div>
+
       <SectionTitle text="Check out our collection" className="text-h4" />
-      <div className="flex flex-wrap gap-12">
+      <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {data?.data?.length > 0 ? (
-          data?.data?.map((p: any, index: number) => (
-            <BookCard
-              key={index + "recommend"}
-              title={p?.title}
-              rating={p?.average_rating}
-              image={p?.image_url}
-              author={p?.authors}
-              language={p?.language_code}
-              date={p?.original_publication_year}
-              id={p?._id}
-              bookId={p?.id}
-            />
-          ))
+          data?.data
+            ?.slice(0, 8)
+            ?.map((p: any, index: number) => (
+              <BookCard
+                key={index + "recommend"}
+                title={p?.title}
+                rating={p?.average_rating}
+                image={p?.image_url}
+                author={p?.authors}
+                language={p?.language_code}
+                date={p?.original_publication_year}
+                id={p?._id}
+                bookId={p?.id}
+              />
+            ))
         ) : (
           <p className="text-center text-black text-2xl">
             No results found with your search keyword:{" "}
@@ -99,13 +78,14 @@ export default function BookComponent() {
           </p>
         )}
       </div>
-      <PaginationComponent
-        total={data?.totalPages}
-        defaultCurrent={1}
-        onChange={handlePageChange}
-      />
+      <center className="mt-10 mb-14">
+        <ButtonComponent
+          text="View more"
+          btnClick={() => router.push("/books/collection")}
+        />
+      </center>
       <SectionTitle text="Our Recommendations" className="text-h4" />
-      <div className="flex flex-wrap gap-12">
+      <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {recommendedBooks?.data?.map((p: any, index: number) => (
           <BookCard
             key={index + "recommend"}

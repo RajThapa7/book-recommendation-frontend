@@ -1,12 +1,10 @@
-import React from "react";
-import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import { routes } from "@/contants/routes";
 import ButtonComponent from "@/components/common/button/button";
+import { routes } from "@/contants/routes";
 import { useAddBookToListMutation } from "@/store/features/book/book.api";
-import { getUser } from "@/lib/getUser";
 import { Button, message } from "antd";
 import { getCookie } from "cookies-next";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Tag = ({ text }: { text: string }) => {
   return (
@@ -60,10 +58,11 @@ export default function BookCard({
 
         <Image src={image} alt="book image" width={120} height={192} />
       </div>
-      <div className="pt-4"
-       onClick={() =>
-         navigate.push(routes.book.singleBook(id) + "?bookId=" + bookId)
-       }
+      <div
+        className="pt-4"
+        onClick={() =>
+          navigate.push(routes.book.singleBook(id) + "?bookId=" + bookId)
+        }
       >
         <p className="text-gray-800 text-h6 font-h1">{title}</p>
         <p className="text-p-sm text-primary-dark">{author}</p>
