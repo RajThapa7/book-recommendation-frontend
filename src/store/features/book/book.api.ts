@@ -1,10 +1,7 @@
 import { endpoints } from "@/contants/endpoints";
 import { protectedBaseQuery } from "@/store/base-query/base-query";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {
-  AddBookToListInterface,
-  SearchBookFilter,
-} from "./book.interface";
+import { AddBookToListInterface, SearchBookFilter } from "./book.interface";
 
 export const bookApi = createApi({
   baseQuery: protectedBaseQuery,
@@ -47,21 +44,15 @@ export const bookApi = createApi({
       providesTags: ["book"],
     }),
     addBookToList: build.mutation({
-      query: ({ book_id, user_id }: AddBookToListInterface) => ({
+      query: ({ userId, bookId }: AddBookToListInterface) => ({
         url: endpoints.book.addBookToList,
-        body: { book_id, user_id },
+        body: { userId, bookId },
         method: "POST",
       }),
       invalidatesTags: ["book"],
     }),
     removeSavedBookFromList: build.mutation({
-      query: ({
-        user_id,
-        book_id,
-      }: {
-        user_id: string;
-        book_id: string;
-      }) => ({
+      query: ({ user_id, book_id }: { user_id: string; book_id: string }) => ({
         url: endpoints.book.removeBookFromList({ user_id, book_id }),
         method: "PATCH",
       }),

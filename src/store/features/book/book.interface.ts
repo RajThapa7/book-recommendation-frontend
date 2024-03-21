@@ -5,8 +5,8 @@ export interface SearchBookFilter {
   limit: string;
 }
 export interface AddBookToListInterface {
-  user_id: string;
-  book_id: string;
+  userId: string;
+  bookId: string;
 }
 export interface RemoveBookInterface {
   password: string;

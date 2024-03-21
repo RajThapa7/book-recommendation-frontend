@@ -1,4 +1,3 @@
-import ButtonComponent from "@/components/common/button/button";
 import { routes } from "@/contants/routes";
 import {
   useAddBookToListMutation,
@@ -7,7 +6,7 @@ import {
 import { Button, message } from "antd";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Tag = ({ text }: { text: string }) => {
   return (
@@ -46,8 +45,8 @@ export default function BookCard({
   const navigate = useRouter();
   const handleSaveBook = async () => {
     await addBookToSave({
-      book_id: id,
-      user_id: JSON.parse(getCookie("user")!)?.userId?.toString(),
+      bookId: id,
+      userId: JSON.parse(getCookie("user")!)?.userId?.toString(),
     });
     messageApi.success("Book added to list");
   };
@@ -56,10 +55,16 @@ export default function BookCard({
       book_id: id,
       user_id: JSON.parse(getCookie("user")!)?.userId?.toString(),
     });
-    messageApi.error("Book remove from list");
+    messageApi.error("Book removed from the list");
   };
   return (
-    <div className="py-10 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer relative h-full">
+    <div
+      className="py-10 flex flex-col gap-y-2x items-center rounded-lg w-[268px] px-6 cursor-pointer relative h-full hover:shadow-lg transition group"
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate.push(routes.book.singleBook(id) + "?bookId=" + bookId);
+      }}
+    >
       <div className="p-2 bg-blue-100 relative rounded-full flex items-end flex-col w-[220px] justify-center">
         <div className="flex flex-col gap-2 absolute top-10 left-0">
           <Tag text={date} />
@@ -68,13 +73,10 @@ export default function BookCard({
 
         <Image src={image} alt="book image" width={120} height={192} />
       </div>
-      <div
-        className="pt-4"
-        onClick={() =>
-          navigate.push(routes.book.singleBook(id) + "?bookId=" + bookId)
-        }
-      >
-        <p className="text-gray-800 text-h6 font-h1">{title}</p>
+      <div className="pt-4">
+        <p className="text-gray-800 text-h6 font-h1 transition group-hover:text-blue-900">
+          {title}
+        </p>
         <p className="text-p-sm text-primary-dark">{author}</p>
         <p className="text-p-sm text-red-600 capitalize">{language}</p>
       </div>
@@ -82,7 +84,10 @@ export default function BookCard({
         {!addBtn && (
           <div className="flex justify-center">
             <Button
-              onClick={handleSaveBook}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSaveBook();
+              }}
               className="flex flex-row items-center gap-2 border-blue-700 text-blue-700 hover:border-blue-700 hover:text-blue-700 absolute bottom-4"
             >
               <HeartIcon />
@@ -91,13 +96,17 @@ export default function BookCard({
           </div>
         )}
         {removeBtn && (
-          <ButtonComponent
-            text="Remove"
-            type="button"
-            size="text-[12px]"
-            bgColor="border-red bg-red-600"
-            btnClick={handleRemoveBook}
-          />
+          <center>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveBook();
+              }}
+              className="absolute bottom-4 border-red-600 hover:!bg-red-600 hover:!text-white text-red-600 hover:!border-red-600 left-24"
+            >
+              Remove
+            </Button>
+          </center>
         )}
       </div>
       {contextHolder}
