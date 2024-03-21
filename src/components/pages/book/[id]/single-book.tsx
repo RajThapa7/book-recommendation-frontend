@@ -11,7 +11,7 @@ export default function SingleBookComponent() {
     id: userData?.userId,
   });
   return (
-    <div className="mx-auto w-4/5 flex flex-col gap-12 py-16">
+    <div className="mx-auto w-4/5 flex flex-col gap-12 py-0">
       <div className="flex flex-col gap-2 items-start flex-wrap w-full">
         <BookDescription />
       </div>

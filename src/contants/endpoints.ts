@@ -34,11 +34,11 @@ export const endpoints = {
     },
     getBookById: (id: number | string): string => "/books/" + id,
     getSavedList: (id: number | string): string => "/list/" + id,
-    getUserRatingOnBook: ({ userId, bookId }: GetBookRatingInterface) =>
-      `/ratings/${userId}/${bookId}`,
+    getUserRatingOnBook: ({ userId, bookId, page_number }: GetBookRatingInterface) =>
+      `/ratings/${userId}/${bookId}?page=${page_number}`,
     addBookToList: "/list/add-book",
     addRatingToBook: "/ratings/add",
-    removeBookFromList: ({ id, book_id }: { id: string; book_id: string }) =>
-      "/list/" + id + "/" + book_id,
+    removeBookFromList: ({ user_id, book_id }: { user_id: string; book_id: string }) =>
+      "/list/" + user_id + "/" + book_id,
   },
 };

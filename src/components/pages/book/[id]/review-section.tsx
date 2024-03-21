@@ -1,21 +1,30 @@
 "use client";
-import PaginationComponent from "@/components/common/pagination/pagination";
 import Rating from "@/components/common/rating/rating";
 import { useGetUserRatingOnBookQuery } from "@/store/features/ratings/rating.api";
-import { Avatar } from "antd";
+import { Avatar, Button } from "antd";
 import { getCookie } from "cookies-next";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 export default function ReviewSection() {
   const searchParams = useSearchParams();
+  const [reviewCounter, setReviewCounter] = useState<number>(1);
   const { data: userReviewData, refetch } = useGetUserRatingOnBookQuery({
     userId: JSON.parse(getCookie("user")!)?.userId,
     bookId: searchParams?.get("bookId") as string,
+    page_number: reviewCounter,
   });
-  console.log(userReviewData);
-  const handlePageChange = (pageNumber: number) => {
-    refetch();
+  const handlePageIncrement = () => {
+    if (userReviewData?.totalPages > reviewCounter) {
+      setReviewCounter(reviewCounter + 1);
+      refetch();
+    }
+  };
+  const handlePageDecrement = () => {
+    if (reviewCounter > 1) {
+      setReviewCounter(reviewCounter - 1);
+      refetch();
+    }
   };
   return (
     <div className="w-full">
@@ -26,11 +35,17 @@ export default function ReviewSection() {
             <CommentLayout review={p?.review} rating={p?.rating} key={p?._id} />
           ))}
       </div>
-      <PaginationComponent
-        total={userReviewData?.totalPages}
-        defaultCurrent={userReviewData?.page}
-        onChange={handlePageChange}
-      />
+      <div className="mt-4 flex gap-4">
+        <Button onClick={handlePageDecrement} disabled={reviewCounter === 1}>
+          Prev
+        </Button>
+        <Button
+          onClick={handlePageIncrement}
+          disabled={reviewCounter === userReviewData?.total_pages}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }

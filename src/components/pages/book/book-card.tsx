@@ -1,6 +1,9 @@
 import ButtonComponent from "@/components/common/button/button";
 import { routes } from "@/contants/routes";
-import { useAddBookToListMutation } from "@/store/features/book/book.api";
+import {
+  useAddBookToListMutation,
+  useRemoveSavedBookFromListMutation,
+} from "@/store/features/book/book.api";
 import { Button, message } from "antd";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
@@ -37,9 +40,9 @@ export default function BookCard({
   addBtn,
   bookId,
 }: Book) {
-  const searchParams = useSearchParams();
   const [messageApi, contextHolder] = message.useMessage();
   const [addBookToSave] = useAddBookToListMutation();
+  const [removeBookFromList] = useRemoveSavedBookFromListMutation();
   const navigate = useRouter();
   const handleSaveBook = async () => {
     await addBookToSave({
@@ -47,6 +50,13 @@ export default function BookCard({
       user_id: JSON.parse(getCookie("user")!)?.userId?.toString(),
     });
     messageApi.success("Book added to list");
+  };
+  const handleRemoveBook = async () => {
+    await removeBookFromList({
+      book_id: id,
+      user_id: JSON.parse(getCookie("user")!)?.userId?.toString(),
+    });
+    messageApi.error("Book remove from list");
   };
   return (
     <div className="py-10 flex flex-col gap-y-2x items-center shadow-md rounded-lg w-[268px] px-6 cursor-pointer relative h-full">
@@ -86,6 +96,7 @@ export default function BookCard({
             type="button"
             size="text-[12px]"
             bgColor="border-red bg-red-600"
+            btnClick={handleRemoveBook}
           />
         )}
       </div>

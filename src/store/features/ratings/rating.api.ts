@@ -6,7 +6,6 @@ import { AddRatingInterface, GetBookRatingInterface } from "./rating.interface";
 export const ratingApi = createApi({
   baseQuery: protectedBaseQuery,
   reducerPath: "ratingApi",
-  tagTypes: ["rating"],
   endpoints: (build) => ({
     addRatingToBook: build.mutation({
       query: ({ rating, review, bookId, userId }: AddRatingInterface) => ({
@@ -16,8 +15,8 @@ export const ratingApi = createApi({
       }),
     }),
     getUserRatingOnBook: build.query({
-      query: ({ userId, bookId }: GetBookRatingInterface) => ({
-        url: endpoints.book.getUserRatingOnBook({ userId, bookId }),
+      query: ({ userId, bookId,page_number }: GetBookRatingInterface) => ({
+        url: endpoints.book.getUserRatingOnBook({ userId, bookId,page_number }),
         method: "GET",
       }),
     }),

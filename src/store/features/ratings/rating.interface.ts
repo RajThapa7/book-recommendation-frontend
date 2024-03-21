@@ -4,7 +4,8 @@ export interface AddRatingInterface {
   userId: number | string;
   bookId: number | string;
 }
-export interface GetBookRatingInterface{
-    bookId:string|number;
-    userId:string|number;
+export interface GetBookRatingInterface {
+  bookId: string | number;
+  userId: string | number;
+  page_number: number;
 }

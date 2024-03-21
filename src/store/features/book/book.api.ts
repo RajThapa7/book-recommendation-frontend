@@ -3,7 +3,6 @@ import { protectedBaseQuery } from "@/store/base-query/base-query";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import {
   AddBookToListInterface,
-  RemoveBookInterface,
   SearchBookFilter,
 } from "./book.interface";
 
@@ -17,30 +16,35 @@ export const bookApi = createApi({
         url: endpoints.book.searchBookList(search, optionValue, page, limit),
         method: "GET",
       }),
+      providesTags: ["book"],
     }),
     getBooks: build.query({
       query: () => ({
         url: endpoints.book.getAllBookList,
         method: "GET",
       }),
+      providesTags: ["book"],
     }),
     getBookRecommendations: build.query({
       query: ({ id }: { id?: string | number }) => ({
         url: endpoints.book.getBooksRecommendation(id),
         method: "GET",
       }),
+      providesTags: ["book"],
     }),
     getBookById: build.query({
       query: ({ id }: { id: string | number }) => ({
         url: endpoints.book.getBookById(id),
         method: "GET",
       }),
+      providesTags: ["book"],
     }),
     getSavedBooks: build.query({
       query: ({ id }: { id: string | number }) => ({
         url: endpoints.book.getSavedList(id),
         method: "GET",
       }),
+      providesTags: ["book"],
     }),
     addBookToList: build.mutation({
       query: ({ book_id, user_id }: AddBookToListInterface) => ({
@@ -48,21 +52,20 @@ export const bookApi = createApi({
         body: { book_id, user_id },
         method: "POST",
       }),
+      invalidatesTags: ["book"],
     }),
     removeSavedBookFromList: build.mutation({
       query: ({
-        id,
+        user_id,
         book_id,
-        payload,
       }: {
-        id: string;
+        user_id: string;
         book_id: string;
-        payload: RemoveBookInterface;
       }) => ({
-        url: endpoints.book.removeBookFromList({ id, book_id }),
+        url: endpoints.book.removeBookFromList({ user_id, book_id }),
         method: "PATCH",
-        body: payload,
       }),
+      invalidatesTags: ["book"],
     }),
   }),
 });
