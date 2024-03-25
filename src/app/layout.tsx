@@ -1,7 +1,11 @@
+
 import ProvidersWrapper from "@/context/wrapper";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Suspense } from "react";
+import { Spin } from "antd";
+import Head from "@/components/common/head/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,9 +21,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Head/>
       <ProvidersWrapper>
         <body className={["h-full w-full", inter.className].join(" ")}>
-          {children}
+          <Suspense
+            fallback={
+              <Spin tip="Loading" size="large">
+                <div className="content" />
+              </Spin>
+            }
+          >
+            {children}
+          </Suspense>
         </body>
       </ProvidersWrapper>
     </html>

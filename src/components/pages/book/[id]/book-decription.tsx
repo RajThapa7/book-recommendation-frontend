@@ -1,14 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useGetBookByIdQuery } from "@/store/features/book/book.api";
 import ButtonComponent from "@/components/common/button/button";
 import Rating from "@/components/common/rating/rating";
 import ReviewModal from "./review-modal";
-import ReviewSection from "./review-section";
+import ReviewSection, { CommentLayout } from "./review-section";
+import { useGetUserRatingOnBookQuery } from "@/store/features/ratings/rating.api";
+import { getCookie } from "cookies-next";
+import { getUser } from "@/lib/getUser";
 
 export default function BookDescription() {
+  const searchParams = useSearchParams();
   const [modal, setModal] = useState<boolean>(false);
   const path = usePathname();
   let defaultImage =
@@ -16,7 +20,11 @@ export default function BookDescription() {
   const { data } = useGetBookByIdQuery({
     id: path?.replace("/books/", ""),
   });
-
+  const { data: userReviewData, refetch } = useGetUserRatingOnBookQuery({
+    userId: getUser()?.userId,
+    bookId: searchParams?.get("bookId") as string,
+    page_number: 1,
+  });
   return (
     <div className="flex flex-row gap-10 items-center flex-wrap">
       <Image
@@ -44,9 +52,10 @@ export default function BookDescription() {
         </p>
         <div className="flex flex-row justify-between">
           <div className="flex flex-row gap-1">
-            <Rating value={data?.data?.average_rating} disabled />
+            <Rating value={userReviewData?.average_rating} disabled />
             <p className="text-primary-black text-p capitalize">
-              {data?.data?.average_rating}({data?.data?.ratings_count} Ratings)
+              {userReviewData?.average_rating?.toFixed(2)}(
+              {userReviewData?.totalCount} Ratings)
             </p>
           </div>
           <div className="flex flex-row gap-8">
@@ -59,16 +68,40 @@ export default function BookDescription() {
           </div>
         </div>
         <div>
-          <ButtonComponent
-            text="Write a Review"
-            type="button"
-            size="text-[12px]"
-            bgColor="bg-primary-black"
-            btnClick={() => setModal(true)}
-          />
+          {userReviewData?.currentUserRating && (
+            <p className="text-p text-primary-black font-link">
+              Your review on this book:
+            </p>
+          )}
+          {userReviewData?.currentUserRating && (
+            <CommentLayout
+              rating={userReviewData?.currentUserRating}
+              review={userReviewData?.currentUserReview}
+              active
+            />
+          )}
+        </div>
+        <div className="flex flex-row gap-8 mt-8">
+          <ReviewSection />
+          <div className="flex flex-row flex-wrap w-max  gap-4 h-max mt-8">
+            <div className="flex flex-col gap-2">
+              {userReviewData?.ratingCount?.map((p: any, index: number) => (
+                <div className="flex gap-2" key={index}>
+                  <Rating value={index + 1} disabled />
+                  <p>({p})</p>
+                </div>
+              ))}
+            </div>
+            <ButtonComponent
+              text="Write a Review"
+              type="button"
+              size="text-[12px]"
+              bgColor="bg-primary-black"
+              btnClick={() => setModal(true)}
+            />
+          </div>
         </div>
       </div>
-      <ReviewSection />
       <ReviewModal handleCancel={() => setModal(false)} isModalOpen={modal} />
     </div>
   );

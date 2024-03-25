@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { routes } from "@/contants/routes";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 
 export default function BackButton() {
   const navigate = useRouter();

@@ -1,5 +1,6 @@
 "use client";
 import Rating from "@/components/common/rating/rating";
+import { getUser } from "@/lib/getUser";
 import { useGetUserRatingOnBookQuery } from "@/store/features/ratings/rating.api";
 import { Avatar, Button } from "antd";
 import { getCookie } from "cookies-next";
@@ -10,7 +11,7 @@ export default function ReviewSection() {
   const searchParams = useSearchParams();
   const [reviewCounter, setReviewCounter] = useState<number>(1);
   const { data: userReviewData, refetch } = useGetUserRatingOnBookQuery({
-    userId: JSON.parse(getCookie("user")!)?.userId,
+    userId: getUser()?.userId,
     bookId: searchParams?.get("bookId") as string,
     page_number: reviewCounter,
   });
@@ -50,15 +51,21 @@ export default function ReviewSection() {
   );
 }
 
-const CommentLayout = ({
+export const CommentLayout = ({
   rating,
   review,
+  active,
 }: {
   rating: number;
   review: string;
+  active?: boolean;
 }) => {
   return (
-    <div className="flex items-center gap-4 border p-4 w-full rounded-md">
+    <div
+      className={`flex items-center gap-4 border p-4 w-full rounded-md ${
+        active && "bg-blue-50"
+      }`}
+    >
       <Avatar className="bg-blue-700">U</Avatar>
       <div className="flex flex-col gap-2">
         <Rating disabled value={rating || 0} />

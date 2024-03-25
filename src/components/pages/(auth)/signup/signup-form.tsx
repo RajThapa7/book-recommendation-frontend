@@ -13,7 +13,7 @@ import ButtonComponent from "@/components/common/button/button";
 import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
 import LinkTag from "@/components/common/text/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -35,7 +35,6 @@ const SignUpForm = () => {
     validationSchema: validationSchema,
     onSubmit: async (values: SignUpFormInterface) => {
       const response = await signupApiCall(values);
-      console.log(response);
       if (response?.data?.user) {
         navigate.replace(routes.auth.login);
       }

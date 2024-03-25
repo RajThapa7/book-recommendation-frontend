@@ -9,7 +9,6 @@ import ButtonComponent from "@/components/common/button/button";
 import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
 import LinkTag from "@/components/common/text/link";
-import { useRouter } from "next/navigation";
 import {
   useGetTokenQuery,
   useLoginMutation,
@@ -17,6 +16,7 @@ import {
 import { LoginFormInterface } from "@/store/features/auth/auth.interface";
 import { setCookie } from "cookies-next";
 import { session } from "@/contants/token";
+import { useRouter } from "next-nprogress-bar";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("User name is required"),
@@ -90,7 +90,7 @@ const LoginForm = () => {
       </form>
       <p className="text-p-sm font-p text-center mt-4">
         Not registered?{" "}
-        <LinkTag link={routes?.auth?.signup} text="Create an account" />
+        <LinkTag link={routes?.auth?.signup || "#"} text="Create an account" />
       </p>
     </div>
   );

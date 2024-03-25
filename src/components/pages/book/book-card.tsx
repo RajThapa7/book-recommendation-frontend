@@ -1,12 +1,13 @@
+'use client';
 import { routes } from "@/contants/routes";
+import { getUser } from "@/lib/getUser";
 import {
   useAddBookToListMutation,
   useRemoveSavedBookFromListMutation,
 } from "@/store/features/book/book.api";
 import { Button, message } from "antd";
-import { getCookie } from "cookies-next";
+import { useRouter } from "next-nprogress-bar";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 const Tag = ({ text }: { text: string }) => {
   return (
@@ -46,14 +47,14 @@ export default function BookCard({
   const handleSaveBook = async () => {
     await addBookToSave({
       bookId: id,
-      userId: JSON.parse(getCookie("user")!)?.userId?.toString(),
+      userId: getUser()?.userId?.toString(),
     });
     messageApi.success("Book added to list");
   };
   const handleRemoveBook = async () => {
     await removeBookFromList({
       book_id: id,
-      user_id: JSON.parse(getCookie("user")!)?.userId?.toString(),
+      user_id: getUser()?.userId?.toString(),
     });
     messageApi.error("Book removed from the list");
   };
@@ -126,9 +127,9 @@ const HeartIcon = () => {
     >
       <path
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
         d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
       />
     </svg>

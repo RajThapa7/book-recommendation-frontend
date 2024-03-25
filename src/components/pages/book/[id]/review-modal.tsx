@@ -6,6 +6,7 @@ import TextArea from "antd/es/input/TextArea";
 import { useAddRatingToBookMutation } from "@/store/features/ratings/rating.api";
 import { getCookie } from "cookies-next";
 import { useSearchParams } from "next/navigation";
+import { getUser } from "@/lib/getUser";
 
 interface ModalProps {
   isModalOpen: boolean;
@@ -21,7 +22,7 @@ export default function ReviewModal({ isModalOpen, handleCancel }: ModalProps) {
     messageApi.success("Thank you for your review");
     await reviewMutation({
       bookId: searchParams?.get("bookId") as string,
-      userId: JSON.parse(getCookie("user")!)?.userId,
+      userId: getUser()?.userId,
       rating: rate,
       review: bookReview,
     });

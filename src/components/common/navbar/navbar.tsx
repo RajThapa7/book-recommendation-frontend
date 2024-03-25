@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { routes } from "@/contants/routes";
 import { getToken } from "@/lib/getToken";
 import { useLogoutMutation } from "@/store/features/auth/auth.api";
 import { deleteCookie } from "cookies-next";
 import { session } from "@/contants/token";
 import DrawerComponent from "../drawer/drawer";
+import { useRouter } from "next-nprogress-bar";
 
 export default function Navbar() {
   const router = useRouter();

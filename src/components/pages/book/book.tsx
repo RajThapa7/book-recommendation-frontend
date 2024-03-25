@@ -7,10 +7,10 @@ import {
   useGetBooksQuery,
 } from "@/store/features/book/book.api";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import BookCard from "./book-card";
+import { useRouter } from "next-nprogress-bar";
 
 const validationSchema = Yup.object({
   search: Yup.string().required("Please enter search text"),

@@ -1,6 +1,8 @@
 "use client";
 import Footer from "@/components/common/footer/footer";
+import Head from "@/components/common/head/head";
 import Navbar from "@/components/common/navbar/navbar";
+import { getUser } from "@/lib/getUser";
 import { setUserInfo } from "@/store/features/user-info/user-info.slice";
 import { getCookie } from "cookies-next";
 import React, { useEffect } from "react";
@@ -14,7 +16,7 @@ export default function BookLayout({
   const dispatch = useDispatch();
   useEffect(() => {
     if (getCookie("user")) {
-      dispatch(setUserInfo(JSON.parse(getCookie("user")!)));
+      dispatch(setUserInfo(getUser()));
     }
   }, []);
   return (
