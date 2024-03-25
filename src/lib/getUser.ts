@@ -1,7 +1,18 @@
 import { session } from "@/contants/token";
-import { getCookie } from "cookies-next";
+import { CookieValueTypes, getCookie } from "cookies-next";
 
 export const getUser = () => {
-    const user: string | null | undefined = getCookie(session.user);
-    return JSON.parse(user!);
+  const user: CookieValueTypes = getCookie(session.user);
+  if (user) {
+    try {
+      return JSON.parse(user);
+    } catch {
+      return {
+        userId: 1,
+      };
+    }
+  }
+  return {
+    userId: 1,
+  };
 };

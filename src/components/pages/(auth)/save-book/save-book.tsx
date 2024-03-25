@@ -2,7 +2,6 @@
 import BookSkeletal from "@/components/common/BookSkeletal/BookSkeletal";
 import ButtonComponent from "@/components/common/button/button";
 import { useGetSavedBooksQuery } from "@/store/features/book/book.api";
-import { getCookie } from "cookies-next";
 import Image from "next/image";
 import BookCard from "../../book/book-card";
 import { useRouter } from "next-nprogress-bar";
@@ -49,7 +48,7 @@ export default function SaveBookComponent() {
             height={500}
           />
           <p className="text-2xl font-semibold text-center mt-6">
-            Sorry, you don't have any saved books
+            Sorry, you don{"'"}t have any saved books
           </p>
           <center className="mt-5">
             <ButtonComponent
