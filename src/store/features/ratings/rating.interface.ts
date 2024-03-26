@@ -9,3 +9,8 @@ export interface GetBookRatingInterface {
   userId: string | number;
   page_number: number;
 }
+
+export interface DeleteRatingInterface {
+  bookId: string | number;
+  userId: string | number;
+}

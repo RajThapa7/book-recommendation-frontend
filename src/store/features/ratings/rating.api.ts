@@ -1,19 +1,21 @@
 import { endpoints } from "@/contants/endpoints";
 import { protectedBaseQuery } from "@/store/base-query/base-query";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { AddRatingInterface, GetBookRatingInterface } from "./rating.interface";
+import {
+  AddRatingInterface,
+  DeleteRatingInterface,
+  GetBookRatingInterface,
+} from "./rating.interface";
 
 export const ratingApi = createApi({
   baseQuery: protectedBaseQuery,
   reducerPath: "ratingApi",
-  tagTypes:['rating'],
   endpoints: (build) => ({
     addRatingToBook: build.mutation({
       query: ({ rating, review, bookId, userId }: AddRatingInterface) => ({
         url: endpoints.book.addRatingToBook,
         body: { rating, review, bookId, userId },
         method: "POST",
-        invalidatesTags: ["rating"],
       }),
     }),
     getUserRatingOnBook: build.query({
@@ -24,11 +26,23 @@ export const ratingApi = createApi({
           page_number,
         }),
         method: "GET",
-        providesTags: ["rating"],
+      }),
+    }),
+    deleteRatings: build.mutation({
+      query: ({ bookId, userId }: DeleteRatingInterface) => ({
+        url: endpoints.book.deleteUserRatingOnBook,
+        body: {
+          bookId,
+          userId,
+        },
+        method: "DELETE",
       }),
     }),
   }),
 });
 
-export const { useAddRatingToBookMutation, useGetUserRatingOnBookQuery } =
-  ratingApi;
+export const {
+  useAddRatingToBookMutation,
+  useGetUserRatingOnBookQuery,
+  useDeleteRatingsMutation,
+} = ratingApi;

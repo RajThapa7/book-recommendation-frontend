@@ -13,7 +13,7 @@ export default function ProvidersWrapper({ children }: ChildrenType) {
     <StoreProvider>
       <AppProgressBar
         height="3px"
-        color="red"
+        color="#20359e"
         options={{ showSpinner: false }}
         shallowRouting
       />

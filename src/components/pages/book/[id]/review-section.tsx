@@ -3,9 +3,8 @@ import Rating from "@/components/common/rating/rating";
 import { getUser } from "@/lib/getUser";
 import { useGetUserRatingOnBookQuery } from "@/store/features/ratings/rating.api";
 import { Avatar, Button } from "antd";
-import { getCookie } from "cookies-next";
 import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function ReviewSection() {
   const searchParams = useSearchParams();
@@ -15,6 +14,7 @@ export default function ReviewSection() {
     bookId: searchParams?.get("bookId") as string,
     page_number: reviewCounter,
   });
+
   const handlePageIncrement = () => {
     if (userReviewData?.totalPages > reviewCounter) {
       setReviewCounter(reviewCounter + 1);
@@ -29,7 +29,7 @@ export default function ReviewSection() {
   };
   return (
     <div className="w-full">
-      <p className="mb-4">Reviews from users are listed below:</p>
+      <p className="mb-4">Reviews from other users:</p>
       <div className="flex flex-col gap-4">
         {userReviewData &&
           userReviewData?.data?.map((p: any) => (
@@ -55,22 +55,29 @@ export const CommentLayout = ({
   rating,
   review,
   active,
+  selfReview = false,
+  handleDelete,
 }: {
   rating: number;
-  review: string;
+  review?: string;
   active?: boolean;
+  selfReview?: boolean;
+  handleDelete?: () => Promise<void>;
 }) => {
   return (
     <div
-      className={`flex items-center gap-4 border p-4 w-full rounded-md ${
+      className={`${
         active && "bg-blue-50"
-      }`}
+      } w-full flex flex-row items-center justify-between rounded-md border p-4`}
     >
-      <Avatar className="bg-blue-700">U</Avatar>
-      <div className="flex flex-col gap-2">
-        <Rating disabled value={rating || 0} />
-        <p className="text-p">{review || "No comments"}</p>
+      <div className={`flex items-center gap-4`}>
+        <Avatar className="bg-blue-700">U</Avatar>
+        <div className="flex flex-col gap-2 h-full justify-center">
+          <Rating disabled value={rating || 1} />
+          {review && <p className="text-p">{review}</p>}
+        </div>
       </div>
+      {selfReview && <Button onClick={handleDelete}>Delete Review</Button>}
     </div>
   );
 };

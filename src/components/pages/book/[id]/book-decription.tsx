@@ -1,32 +1,51 @@
 "use client";
-import React, { useState } from "react";
-import Image from "next/image";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useGetBookByIdQuery } from "@/store/features/book/book.api";
 import ButtonComponent from "@/components/common/button/button";
 import Rating from "@/components/common/rating/rating";
+import { getUser } from "@/lib/getUser";
+import { useGetBookByIdQuery } from "@/store/features/book/book.api";
+import {
+  useDeleteRatingsMutation,
+  useGetUserRatingOnBookQuery,
+} from "@/store/features/ratings/rating.api";
+import { message } from "antd";
+import Image from "next/image";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import ReviewModal from "./review-modal";
 import ReviewSection, { CommentLayout } from "./review-section";
-import { useGetUserRatingOnBookQuery } from "@/store/features/ratings/rating.api";
-import { getCookie } from "cookies-next";
-import { getUser } from "@/lib/getUser";
-import { useSelector } from "react-redux";
 
 export default function BookDescription() {
   const searchParams = useSearchParams();
-  const currentUserData = useSelector((state: any) => state.userInfo?.rating);
   const [modal, setModal] = useState<boolean>(false);
+  const [deleteMutation] = useDeleteRatingsMutation();
+  const [messageApi, contextHolder] = message.useMessage();
+
   const path = usePathname();
   let defaultImage =
     "https://images.unsplash.com/photo-1594026200204-a25bea256816?q=80&w=2946&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
   const { data } = useGetBookByIdQuery({
     id: path?.replace("/books/", ""),
   });
-  const { data: userReviewData } = useGetUserRatingOnBookQuery({
+  const {
+    data: userReviewData,
+    refetch,
+    isLoading,
+  } = useGetUserRatingOnBookQuery({
     userId: getUser()?.userId,
     bookId: searchParams?.get("bookId") as string,
     page_number: 1,
   });
+
+  const handleDelete = async () => {
+    await deleteMutation({
+      bookId: searchParams?.get("bookId") as string,
+      userId: getUser()?.userId,
+    }).then(() => {
+      messageApi.success("Review removed successfully");
+    });
+    refetch();
+  };
+
   return (
     <div className="flex flex-row gap-10 items-center flex-wrap">
       <Image
@@ -71,22 +90,17 @@ export default function BookDescription() {
         </div>
         <div>
           {userReviewData?.currentUserRating && (
-            <p className="text-p text-primary-black font-link">
+            <p className="text-p text-primary-black font-link mb-3 mt-4">
               Your review on this book:
             </p>
           )}
-          {!currentUserData && userReviewData?.currentUserRating && (
+          {userReviewData?.currentUserRating && (
             <CommentLayout
               rating={userReviewData?.currentUserRating}
               review={userReviewData?.currentUserReview}
               active
-            />
-          )}
-          {currentUserData && (
-            <CommentLayout
-              rating={currentUserData?.rate}
-              review={currentUserData?.review}
-              active
+              selfReview
+              handleDelete={handleDelete}
             />
           )}
         </div>
@@ -102,7 +116,11 @@ export default function BookDescription() {
               ))}
             </div>
             <ButtonComponent
-              text="Write a Review"
+              text={
+                userReviewData?.currentUserRating
+                  ? "Edit your Review"
+                  : "Write a Review"
+              }
               type="button"
               size="text-[12px]"
               bgColor="bg-primary-black"
@@ -111,7 +129,17 @@ export default function BookDescription() {
           </div>
         </div>
       </div>
-      <ReviewModal handleCancel={() => setModal(false)} isModalOpen={modal} />
+
+      {!isLoading && (
+        <ReviewModal
+          handleCancel={() => setModal(false)}
+          isModalOpen={modal}
+          currentUserRating={userReviewData?.currentUserRating || 0}
+          currentUserReview={userReviewData?.currentUserReview || ""}
+          refetch={refetch}
+        />
+      )}
+      {contextHolder}
     </div>
   );
 }
