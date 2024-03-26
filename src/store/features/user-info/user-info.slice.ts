@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   userInfo: null,
+  rating:null,
 };
 
 const userInfoSlice = createSlice({
@@ -11,9 +12,12 @@ const userInfoSlice = createSlice({
     setUserInfo(state, action) {
       state.userInfo = action.payload;
     },
+    setRatingData(state, action) {
+      state.rating = action.payload;
+    },
   },
 });
 
-export const { setUserInfo } = userInfoSlice.actions;
+export const { setUserInfo,setRatingData } = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;

@@ -1,11 +1,10 @@
-
 import ProvidersWrapper from "@/context/wrapper";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Suspense } from "react";
 import { Spin } from "antd";
-import Head from "@/components/common/head/head";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +20,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head/>
+      <Head>
+        <link rel="icon" href="/test.png" type="image/png" />
+      </Head>
       <ProvidersWrapper>
         <body className={["h-full w-full", inter.className].join(" ")}>
           <Suspense

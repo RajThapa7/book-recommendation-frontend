@@ -9,7 +9,6 @@ import BookCard from "@/components/pages/book/book-card";
 import { useGetSearchedBooksQuery } from "@/store/features/book/book.api";
 import { useFormik } from "formik";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
@@ -20,7 +19,6 @@ const Collection = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageLimitCount, setPageLimitCount] = useState<number>(10);
 
-  const user_data = useSelector((state: any) => state?.userInfo?.userInfo);
   const formik = useFormik({
     initialValues: {
       search: "",

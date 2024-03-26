@@ -10,9 +10,11 @@ import ReviewSection, { CommentLayout } from "./review-section";
 import { useGetUserRatingOnBookQuery } from "@/store/features/ratings/rating.api";
 import { getCookie } from "cookies-next";
 import { getUser } from "@/lib/getUser";
+import { useSelector } from "react-redux";
 
 export default function BookDescription() {
   const searchParams = useSearchParams();
+  const currentUserData = useSelector((state: any) => state.userInfo?.rating);
   const [modal, setModal] = useState<boolean>(false);
   const path = usePathname();
   let defaultImage =
@@ -20,7 +22,7 @@ export default function BookDescription() {
   const { data } = useGetBookByIdQuery({
     id: path?.replace("/books/", ""),
   });
-  const { data: userReviewData, refetch } = useGetUserRatingOnBookQuery({
+  const { data: userReviewData } = useGetUserRatingOnBookQuery({
     userId: getUser()?.userId,
     bookId: searchParams?.get("bookId") as string,
     page_number: 1,
@@ -73,10 +75,17 @@ export default function BookDescription() {
               Your review on this book:
             </p>
           )}
-          {userReviewData?.currentUserRating && (
+          {!currentUserData && userReviewData?.currentUserRating && (
             <CommentLayout
               rating={userReviewData?.currentUserRating}
               review={userReviewData?.currentUserReview}
+              active
+            />
+          )}
+          {currentUserData && (
+            <CommentLayout
+              rating={currentUserData?.rate}
+              review={currentUserData?.review}
               active
             />
           )}

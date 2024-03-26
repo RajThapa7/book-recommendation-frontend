@@ -7,12 +7,15 @@ import { useAddRatingToBookMutation } from "@/store/features/ratings/rating.api"
 import { getCookie } from "cookies-next";
 import { useSearchParams } from "next/navigation";
 import { getUser } from "@/lib/getUser";
+import { useDispatch } from "react-redux";
+import { setRatingData } from "@/store/features/user-info/user-info.slice";
 
 interface ModalProps {
   isModalOpen: boolean;
   handleCancel: () => void;
 }
 export default function ReviewModal({ isModalOpen, handleCancel }: ModalProps) {
+  const dispatch = useDispatch();
   const [rate, setRate] = useState<number>(0);
   const searchParams = useSearchParams();
   const [bookReview, setBookReview] = useState<string>("");
@@ -27,7 +30,12 @@ export default function ReviewModal({ isModalOpen, handleCancel }: ModalProps) {
       review: bookReview,
     });
     handleCancel();
-    window.location.reload();
+    dispatch(
+      setRatingData({
+        rate,
+        review: bookReview,
+      })
+    );
   };
   return (
     <Modal

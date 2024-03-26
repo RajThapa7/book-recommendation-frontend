@@ -7,25 +7,23 @@ import {
   useGetBooksQuery,
 } from "@/store/features/book/book.api";
 import Image from "next/image";
-import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import BookCard from "./book-card";
 import { useRouter } from "next-nprogress-bar";
+import { getUser } from "@/lib/getUser";
 
 const validationSchema = Yup.object({
   search: Yup.string().required("Please enter search text"),
 });
 export default function BookComponent() {
-  const user_data = useSelector((state: any) => state?.userInfo?.userInfo);
 
   const {
     data,
-    refetch,
     isLoading: isSearchBookLoading,
   } = useGetBooksQuery({});
   const { data: recommendedBooks, isLoading: isRecommendationLoading } =
     useGetBookRecommendationsQuery({
-      id: user_data?.userId,
+      id: getUser()?.userId?.toString(),
     });
   const router = useRouter();
   return (

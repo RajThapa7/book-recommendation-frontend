@@ -1,14 +1,13 @@
 "use client";
 import SectionTitle from "@/components/common/text/section-title";
 import { useGetBookRecommendationsQuery } from "@/store/features/book/book.api";
-import { useSelector } from "react-redux";
 import BookCard from "../book-card";
 import BookDescription from "./book-decription";
+import { getUser } from "@/lib/getUser";
 
 export default function SingleBookComponent() {
-  const userData = useSelector((state: any) => state?.userInfo?.userInfo);
   const { data } = useGetBookRecommendationsQuery({
-    id: userData?.userId,
+    id: getUser()?.userId?.toString(),
   });
   return (
     <div className="mx-auto w-4/5 flex flex-col gap-12 py-0">
