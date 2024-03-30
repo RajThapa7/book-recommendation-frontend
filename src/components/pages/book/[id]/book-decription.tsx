@@ -14,18 +14,15 @@ import { useState } from "react";
 import ReviewModal from "./review-modal";
 import ReviewSection, { CommentLayout } from "./review-section";
 
-export default function BookDescription() {
+export default function BookDescription({data}:{data:any}) {
   const searchParams = useSearchParams();
   const [modal, setModal] = useState<boolean>(false);
   const [deleteMutation] = useDeleteRatingsMutation();
   const [messageApi, contextHolder] = message.useMessage();
 
-  const path = usePathname();
   let defaultImage =
     "https://images.unsplash.com/photo-1594026200204-a25bea256816?q=80&w=2946&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-  const { data } = useGetBookByIdQuery({
-    id: path?.replace("/books/", ""),
-  });
+
   const {
     data: userReviewData,
     refetch,

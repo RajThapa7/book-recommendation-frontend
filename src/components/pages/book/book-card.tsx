@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { routes } from "@/contants/routes";
 import { getUser } from "@/lib/getUser";
 import {
@@ -27,6 +27,7 @@ interface Book {
   removeBtn?: boolean;
   addBtn?: boolean;
   bookId?: number | string;
+  similarity?: string;
 }
 export default function BookCard({
   date,
@@ -39,6 +40,7 @@ export default function BookCard({
   removeBtn,
   addBtn,
   bookId,
+  similarity,
 }: Book) {
   const [messageApi, contextHolder] = message.useMessage();
   const [addBookToSave] = useAddBookToListMutation();
@@ -80,8 +82,13 @@ export default function BookCard({
         </p>
         <p className="text-p-sm text-primary-dark">{author}</p>
         <p className="text-p-sm text-red-600 capitalize">{language}</p>
+        {similarity && (
+          <p className="text-p-sm text-blue-400 font-bold">
+            Match: {similarity}%
+          </p>
+        )}
       </div>
-      <div className="mt-2">
+      <div className="mt-4">
         {!addBtn && (
           <div className="flex justify-center">
             <Button

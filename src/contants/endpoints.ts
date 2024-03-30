@@ -43,6 +43,8 @@ export const endpoints = {
     deleteUserRatingOnBook: `/ratings/remove`,
     addBookToList: "/list/add-book",
     addRatingToBook: "/ratings/add",
+    recommendBook: "/books/related?limit=1000",
+    listRecommendation: "/books/recommendations/list",
     removeBookFromList: ({
       user_id,
       book_id,

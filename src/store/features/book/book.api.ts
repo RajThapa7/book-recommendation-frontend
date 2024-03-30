@@ -58,6 +58,22 @@ export const bookApi = createApi({
       }),
       invalidatesTags: ["book"],
     }),
+    recomendationOfBook: build.mutation({
+      query: ({ author, title }: { author: string; title: string }) => ({
+        url: endpoints.book.recommendBook,
+        body: { author, title },
+        method: "POST",
+      }),
+      invalidatesTags: ["book"],
+    }),
+    listRelatedBooks: build.mutation({
+      query: ({ books }: { books: any }) => ({
+        url: endpoints.book.listRecommendation,
+        body: { books },
+        method: "POST",
+      }),
+      invalidatesTags: ["book"],
+    }),
   }),
 });
 
@@ -69,4 +85,6 @@ export const {
   useAddBookToListMutation,
   useRemoveSavedBookFromListMutation,
   useGetSavedBooksQuery,
+  useRecomendationOfBookMutation,
+  useListRelatedBooksMutation
 } = bookApi;
