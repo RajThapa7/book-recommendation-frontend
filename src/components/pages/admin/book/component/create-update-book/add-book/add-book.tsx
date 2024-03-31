@@ -15,34 +15,30 @@ export default function AddBookComponent({
   const showToast = useToast();
   const submitHandler = async (values: BookFieldValue) => {
     console.log(values);
-    try {
-      const formData = new FormData();
-      formData.append("image", values?.file?.[0]?.originFileObj);
-      formData.append("title", values?.title);
-      formData.append("id", values?.id);
-      formData.append("authors", values?.authors);
-      formData.append("isbn", values?.isbn);
-      formData.append("isbn13", values?.isbn13);
-      formData.append("language_code", values?.language_code);
-      formData.append(
-        "original_publication_year",
-        values?.original_publication_year
-      );
-      formData.append("original_title", values?.original_title);
-      try {
-        const { data } = await bookAddMutation({
-          data: formData,
-        });
-        showToast({
-          type: "success",
-          title: "book detail added successfully",
-        });
-        onClose();
-      } catch (err) {
-        showToast({ type: "error", title: "book detail not added" });
-      }
-    } catch (err) {
-      showToast({ type: "error", title: "book detail not added" });
+    const formData = new FormData();
+    formData.append("image", values?.file?.[0]?.originFileObj);
+    formData.append("title", values?.title);
+    formData.append("id", values?.id);
+    formData.append("authors", values?.authors);
+    formData.append("isbn", values?.isbn);
+    formData.append("isbn13", values?.isbn13);
+    formData.append("language_code", values?.language_code);
+    formData.append(
+      "original_publication_year",
+      values?.original_publication_year
+    );
+    formData.append("original_title", values?.original_title);
+    const data = await bookAddMutation({
+      data: formData,
+    });
+    if (data?.error?.status === 400) {
+      showToast({ type: "error", title: data.error?.data.message });
+    } else {
+      showToast({
+        type: "success",
+        title: "book detail added successfully",
+      });
+      onClose();
     }
   };
   return (

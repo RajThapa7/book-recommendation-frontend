@@ -38,9 +38,8 @@ const LoginForm = () => {
       try {
         const response = await loginApiCall(values);
         if (response?.error?.status !== 400) {
-          deleteAllCookies();
-          setCookie(session.token, response?.data?.token);
-          setCookie(session.user, JSON.stringify(response?.data?.user));
+          setCookie("adminToken", response?.data?.token);
+          setCookie("adminUser", JSON.stringify(response?.data?.user));
           navigate.replace(routes.admin.books);
           toast({
             type: "success",

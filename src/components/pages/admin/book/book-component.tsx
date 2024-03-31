@@ -43,12 +43,12 @@ const AdminBookComponent = () => {
       title: "SN",
       dataIndex: "index",
       key: "index",
-      width: 70,
+      width: 100,
     },
     {
       title: "Books Title",
-      dataIndex: "title",
-      key: "title",
+      dataIndex: "original_title",
+      key: "original_title",
     },
 
     {
@@ -158,7 +158,7 @@ const AdminBookComponent = () => {
             return {
               ...p,
               authors: p?.authors || p?.author,
-              index: index + 1,
+              index: p?.id,
             };
           })}
         loading={isLoading}

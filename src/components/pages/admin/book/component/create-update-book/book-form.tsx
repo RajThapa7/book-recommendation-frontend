@@ -57,6 +57,8 @@ export default function MedicationFormComponent({
         formFields?.original_publication_year
       );
       formik.setFieldValue("original_title", formFields?.original_title);
+    }else{
+      formik.resetForm();
     }
   }, [status, formFields]);
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
