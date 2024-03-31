@@ -11,16 +11,13 @@ import * as Yup from "yup";
 import BookCard from "./book-card";
 import { useRouter } from "next-nprogress-bar";
 import { getUser } from "@/lib/getUser";
+import BookRecommendations from "./book-recommendations/book-recommendations";
 
 const validationSchema = Yup.object({
   search: Yup.string().required("Please enter search text"),
 });
 export default function BookComponent() {
-
-  const {
-    data,
-    isLoading: isSearchBookLoading,
-  } = useGetBooksQuery({});
+  const { data, isLoading: isSearchBookLoading } = useGetBooksQuery({});
   const { data: recommendedBooks, isLoading: isRecommendationLoading } =
     useGetBookRecommendationsQuery({
       id: getUser()?.userId?.toString(),
@@ -69,7 +66,7 @@ export default function BookComponent() {
           btnClick={() => router.push("/books/collection")}
         />
       </center>
-      <SectionTitle text="Our Recommendations" className="text-h4" />
+      {/* <SectionTitle text="Our Recommendations" className="text-h4" />
       <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {!isRecommendationLoading
           ? recommendedBooks?.data?.map((p: any, index: number) => (
@@ -88,7 +85,8 @@ export default function BookComponent() {
           : Array.from({ length: 4 }).map((_, index) => (
               <BookSkeletal key={index} />
             ))}
-      </div>
+      </div> */}
+      <BookRecommendations />
     </div>
   );
 }

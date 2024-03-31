@@ -74,6 +74,13 @@ export const bookApi = createApi({
       }),
       invalidatesTags: ["book"],
     }),
+    cosineSimilarityRecommendation: build.mutation({
+      query: ({ list }: { list: any }) => ({
+        url: endpoints.book.cosineSimilarityBooks,
+        body: { list },
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -86,5 +93,6 @@ export const {
   useRemoveSavedBookFromListMutation,
   useGetSavedBooksQuery,
   useRecomendationOfBookMutation,
-  useListRelatedBooksMutation
+  useListRelatedBooksMutation,
+  useCosineSimilarityRecommendationMutation
 } = bookApi;

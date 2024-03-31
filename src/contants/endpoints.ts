@@ -45,6 +45,7 @@ export const endpoints = {
     addRatingToBook: "/ratings/add",
     recommendBook: "/books/related?limit=1000",
     listRecommendation: "/books/recommendations/list",
+    cosineSimilarityBooks: "/books/related/cosinseSimilarity",
     removeBookFromList: ({
       user_id,
       book_id,

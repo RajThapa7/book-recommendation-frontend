@@ -18,27 +18,6 @@ export default function SaveBookComponent() {
   });
   const router = useRouter();
   const [getRelatedBook] = useListRelatedBooksMutation();
-  const [relatedBooks, setRelatedBooks] = useState(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  useEffect(() => {
-    setLoading(true);
-    const fetchRelatedBooks = async () => {
-      if (data?.books) {
-        try {
-          const response: any = await getRelatedBook({
-            books: data?.books,
-          });
-          setLoading(false);
-          setRelatedBooks(response?.data?.data?.slice(1, 11));
-        } catch (error) {
-          console.error("Error fetching related books:", error);
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchRelatedBooks();
-  }, [data]);
   return (
     <div className="px-20 py-10 flex flex-col gap-10 flex-1">
       <p className="text-2xl text-blue-900 font-bold">
@@ -85,36 +64,6 @@ export default function SaveBookComponent() {
           </center>
         </div>
       )}
-      <div className="flex flex-col gap-6">
-        <SectionTitle
-          text="Let's read out some books(Our recommendation) "
-          className="text-h4"
-        />
-        {loading && (
-          <p className="text-lg font-semibold text-blue-400">
-            Please wait a second...
-          </p>
-        )}
-        <div className="flex flex-wrap gap-12">
-          {relatedBooks &&
-            relatedBooks?.map((p: any, index: number) => (
-              <BookCard
-                similarity={(p?.averageSimilarity * 100)
-                  ?.toFixed(2)
-                  ?.toString()}
-                key={index + "recommend"}
-                title={p?.title}
-                rating={p?.average_rating}
-                image={p?.image_url}
-                author={p?.authors}
-                language={p?.language_code}
-                date={p?.original_publication_year}
-                id={p?._id}
-                bookId={p?.id}
-              />
-            ))}
-        </div>
-      </div>
     </div>
   );
 }
