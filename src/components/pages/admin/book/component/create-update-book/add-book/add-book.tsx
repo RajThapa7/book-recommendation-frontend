@@ -14,9 +14,10 @@ export default function AddBookComponent({
   const [bookAddMutation] = useAddBookMutation();
   const showToast = useToast();
   const submitHandler = async (values: BookFieldValue) => {
+    console.log(values);
     try {
       const formData = new FormData();
-      formData.append("image_url", values?.file?.[0]?.originFileObj);
+      formData.append("image", values?.file?.[0]?.originFileObj);
       formData.append("title", values?.title);
       formData.append("id", values?.id);
       formData.append("authors", values?.authors);
@@ -28,16 +29,16 @@ export default function AddBookComponent({
         values?.original_publication_year
       );
       formData.append("original_title", values?.original_title);
-      const { data } = await bookAddMutation({
-        data: formData,
-      });
-      if (data && (data?.statusCode === 200 || data?.statusCode === 201)) {
+      try {
+        const { data } = await bookAddMutation({
+          data: formData,
+        });
         showToast({
           type: "success",
           title: "book detail added successfully",
         });
         onClose();
-      } else {
+      } catch (err) {
         showToast({ type: "error", title: "book detail not added" });
       }
     } catch (err) {

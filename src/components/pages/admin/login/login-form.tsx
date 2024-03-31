@@ -16,6 +16,7 @@ import { useToast } from "@/lib/toast/useToast";
 import { useAdminLoginMutation } from "@/store/features/admin/login/auth.api";
 import { routes } from "@/contants/routes";
 import Link from "next/link";
+import { deleteAllCookies } from "@/lib/delete-cookies";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("User name is required"),
@@ -37,6 +38,7 @@ const LoginForm = () => {
       try {
         const response = await loginApiCall(values);
         if (response?.error?.status !== 400) {
+          deleteAllCookies();
           setCookie(session.token, response?.data?.token);
           setCookie(session.user, JSON.stringify(response?.data?.user));
           navigate.replace(routes.admin.books);

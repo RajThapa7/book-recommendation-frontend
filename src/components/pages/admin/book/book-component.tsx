@@ -50,6 +50,7 @@ const AdminBookComponent = () => {
       dataIndex: "title",
       key: "title",
     },
+
     {
       title: "Image",
       key: "image_url",
@@ -75,7 +76,6 @@ const AdminBookComponent = () => {
       width: 160,
       render: (data: BookFieldValue) => (
         <div className="flex flex-row gap-2 items-center ">
-          {console.log(data) as any}
           <Image
             src={"/icons/edit.svg"}
             className="cursor-pointer"
@@ -84,7 +84,7 @@ const AdminBookComponent = () => {
             height={20}
             onClick={() => {
               setUpdateModal(true);
-              setItemId(data?.id!);
+              setItemId(data?._id!);
               setRowData(data);
             }}
           />
@@ -96,7 +96,7 @@ const AdminBookComponent = () => {
             height={20}
             onClick={() => {
               setDeleteModal(true);
-              setItemId(data?.id!);
+              setItemId(data?._id!);
             }}
           />
         </div>
@@ -104,15 +104,15 @@ const AdminBookComponent = () => {
     },
   ];
   const deleteMeditationHandler = async () => {
-    const data = await deleteBookApiMutation({ id: itemId });
-    if (data?.data?.statusCode === 200) {
+    try {
+      await deleteBookApiMutation({ id: itemId });
       setDeleteModal(false);
       setItemId(null);
       showToast({
         type: "success",
         title: "Book deleted successfully",
       });
-    } else {
+    } catch (err) {
       showToast({
         type: "error",
         title: "Error occured while deleting book",
@@ -154,10 +154,11 @@ const AdminBookComponent = () => {
         dataSource={data?.data
           ?.slice()
           ?.sort((a: { id: number }, b: { id: number }) => a?.id - b?.id)
-          ?.map((p: BookFieldValue) => {
+          ?.map((p: BookFieldValue, index: number) => {
             return {
               ...p,
               authors: p?.authors || p?.author,
+              index: index + 1,
             };
           })}
         loading={isLoading}

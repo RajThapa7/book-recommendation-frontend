@@ -29,9 +29,9 @@ export const AdminBookApi = createApi({
       }),
     }),
     bookUpdate: build.mutation<any, any>({
-      query: ({ id, data }: { id: string | number; data: any }) => ({
-        url: endpoints?.admin?.getAllBooks + "/" + id,
-        body: data?.data,
+      query: ({ data }: { data: any }) => ({
+        url: endpoints?.admin?.editBook,
+        body: data,
         method: "PATCH",
       }),
       invalidatesTags: ["AdminBook"],

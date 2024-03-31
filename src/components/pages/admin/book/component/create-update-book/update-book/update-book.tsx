@@ -18,11 +18,13 @@ export default function UpdateBookComponent({
   const showToast = useToast();
   const [bookUpdateMutation] = useBookUpdateMutation();
   const submitHandler = async (values: BookFieldValue) => {
+    console.log(values);
     try {
       const formData = new FormData();
       if (values?.file) {
         formData.append("image", values?.file?.[0]?.originFileObj);
       }
+      formData.append("bookId", id?.toString() || "");
       formData.append("title", values?.title);
       formData.append("id", values?.id);
       formData.append("authors", values?.authors);
@@ -34,17 +36,16 @@ export default function UpdateBookComponent({
         values?.original_publication_year
       );
       formData.append("original_title", values?.original_title);
-      const { data } = await bookUpdateMutation({
-        data: formData,
-        id,
-      });
-      if (data && (data?.statusCode === 200 || data?.statusCode === 201)) {
+      try {
+        await bookUpdateMutation({
+          data: formData,
+        });
         showToast({
           type: "success",
           title: "Book detail updated successfully",
         });
         onClose();
-      } else {
+      } catch (err) {
         showToast({ type: "error", title: "Book detail not updated" });
       }
     } catch (err) {

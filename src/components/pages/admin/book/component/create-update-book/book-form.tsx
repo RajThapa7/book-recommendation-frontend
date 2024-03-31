@@ -44,7 +44,6 @@ export default function MedicationFormComponent({
     },
   });
   useEffect(() => {
-    console.log(formFields);
     if (status?.toString()?.toLowerCase() === "update" && formFields) {
       formik.setFieldValue("title", formFields?.title);
       formik.setFieldValue("image_url", formFields?.image_url);
@@ -79,7 +78,7 @@ export default function MedicationFormComponent({
             Id
           </label>
           <Input
-            type="text"
+            type="number"
             id="id"
             placeholder="eg. 1"
             {...formik.getFieldProps("id")}
@@ -151,7 +150,7 @@ export default function MedicationFormComponent({
             ISBN
           </label>
           <Input
-            type="text"
+            type="number"
             id="isbn"
             placeholder="eg. isbn number"
             {...formik.getFieldProps("isbn")}
@@ -165,7 +164,7 @@ export default function MedicationFormComponent({
             ISBN13
           </label>
           <Input
-            type="text"
+            type="number"
             id="title"
             placeholder="eg. isbn 13"
             {...formik.getFieldProps("isbn13")}

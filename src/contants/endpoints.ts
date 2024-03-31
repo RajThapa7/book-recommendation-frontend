@@ -14,7 +14,7 @@ export const endpoints = {
     login:"/admin/login",
     addBook: "/admin/book/add",
     deleteBook: (id: string | number) => "/admin/book/delete/" + id,
-    editBook: "/book/edit",
+    editBook: "/admin/book/edit",
     getUser: "/admin/users",
     getAllBooks: (page?: string, limit?: string): string => {
       return "/books" + `?page=${page}&limit=${limit}`;
