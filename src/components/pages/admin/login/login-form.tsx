@@ -23,17 +23,9 @@ const validationSchema = Yup.object({
 });
 
 const LoginForm = () => {
+  const navigate = useRouter();
   const toast = useToast();
   const [loginApiCall] = useAdminLoginMutation();
-  const { data: tokenData } = useGetTokenQuery({});
-  const navigate = useRouter();
-  useEffect(() => {
-    if (tokenData?.token && tokenData?.user) {
-      setCookie(session.token, tokenData?.token);
-      setCookie(session.user, JSON.stringify(tokenData?.user));
-      navigate.replace(routes.admin.books);
-    }
-  }, [tokenData]);
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -45,7 +37,9 @@ const LoginForm = () => {
       try {
         const response = await loginApiCall(values);
         if (response?.error?.status !== 400) {
-          window.location.reload();
+          setCookie(session.token, response?.data?.token);
+          setCookie(session.user, JSON.stringify(response?.data?.user));
+          navigate.replace(routes.admin.books);
           toast({
             type: "success",
             title: "Logged in successfully",
@@ -105,7 +99,12 @@ const LoginForm = () => {
           )}
         </div>
         <ButtonComponent text="Login" key={"login-btn"} type="submit" />
-        <Link className="text-p text-blue-600 text-center" href={routes.book.book}>Go back to book recommendation</Link>
+        <Link
+          className="text-p text-blue-600 text-center"
+          href={routes.book.book}
+        >
+          Go back to book recommendation
+        </Link>
       </form>
     </div>
   );

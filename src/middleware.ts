@@ -12,11 +12,14 @@ export function middleware(request: NextRequest) {
   if (!token && (pathName === "/" || pathName.startsWith("/books"))) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
+  if (token && pathName === "/admin/login") {
+    return NextResponse.redirect(new URL("/admin/books", request.url));
+  }
   if (!token && (pathName === "/admin/books" || pathName === "/admin/users")) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 }
 
 export const config = {
-  matcher: ["/books/:path*","/admin/:path*"],
+  matcher: ["/books/:path*", "/admin/:path*"],
 };
