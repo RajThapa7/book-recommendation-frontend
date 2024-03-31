@@ -10,6 +10,15 @@ export const endpoints = {
     logout: "/logout",
     authSuccess: "/auth/success",
   },
+  admin: {
+    addBook: "/admin/book/add",
+    deleteBook: (id: string | number) => "/admin/book/delete/" + id,
+    editBook: "/book/edit",
+    getUser: "/admin/users",
+    getAllBooks: (page?: string, limit?: string): string => {
+      return "/books" + `?page=${page}&limit=${limit}`;
+    },
+  },
   book: {
     checkIfBookIsInList: "/list/",
     getBooksRecommendation: (bookId?: string | number): string =>
