@@ -4,20 +4,24 @@ import Image from "next/image";
 import { routes } from "@/contants/routes";
 import { getToken } from "@/lib/getToken";
 import { useLogoutMutation } from "@/store/features/auth/auth.api";
-import { deleteCookie } from "cookies-next";
-import { session } from "@/contants/token";
 import DrawerComponent from "../drawer/drawer";
 import { useRouter } from "next-nprogress-bar";
+import { deleteAllCookies } from "@/lib/delete-cookies";
+import { useToast } from "@/lib/toast/useToast";
 
 export default function Navbar() {
+  const toast = useToast();
   const router = useRouter();
   const [logoutApiCall] = useLogoutMutation();
   const [breadCrum, setBreadCrum] = useState<boolean>(false);
   const logoutHandler = async () => {
-    await logoutApiCall();
-    deleteCookie(session.token);
-    deleteCookie(session.user);
-    router.replace(routes.auth.login);
+    deleteAllCookies();
+    const data = await logoutApiCall({});
+    if (data?.data) {
+      router.replace(routes.auth.login);
+      toast({ title: "User Logged Out", type: "success" });
+      window.location.reload();
+    }
   };
   return (
     <div
@@ -52,6 +56,12 @@ export default function Navbar() {
           </div>
         ) : (
           <div className="flex flex-row gap-4">
+            <p
+              className="text-white cursor-pointer uppercase text-btn font-p-sm"
+              onClick={() => router.push(routes?.admin?.login)}
+            >
+              Admin Panel
+            </p>
             <p
               className="text-white cursor-pointer uppercase text-btn font-p-sm"
               onClick={() => router.push(routes?.auth?.save_book)}

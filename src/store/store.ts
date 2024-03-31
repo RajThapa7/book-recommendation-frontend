@@ -5,6 +5,7 @@ import userInfoSlice from "./features/user-info/user-info.slice";
 import { ratingApi } from "./features/ratings/rating.api";
 import { AdminBookApi } from "./features/admin/books/book.api";
 import { userApi } from "./features/admin/user/user.api";
+import { adminLoginApi } from "./features/admin/login/auth.api";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     [ratingApi.reducerPath]: ratingApi.reducer,
     [AdminBookApi.reducerPath]: AdminBookApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [adminLoginApi.reducerPath]: adminLoginApi.reducer,
     userInfo: userInfoSlice,
   },
   middleware: (getDefaultMiddleware) =>
@@ -21,7 +23,8 @@ export const store = configureStore({
       bookApi.middleware,
       ratingApi.middleware,
       AdminBookApi.middleware,
-      userApi.middleware
+      userApi.middleware,
+      adminLoginApi.middleware
     ),
 });
 

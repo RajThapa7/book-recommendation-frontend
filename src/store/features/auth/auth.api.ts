@@ -3,7 +3,7 @@ import { endpoints } from "@/contants/endpoints";
 import { protectedBaseQuery } from "@/store/base-query/base-query";
 import { LoginFormInterface, SignUpFormInterface } from "./auth.interface";
 
-export const authAPI: any = createApi({
+export const authAPI = createApi({
     baseQuery: protectedBaseQuery,
     reducerPath: "authApi",
     tagTypes: ["auth"],

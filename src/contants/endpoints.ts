@@ -11,6 +11,7 @@ export const endpoints = {
     authSuccess: "/auth/success",
   },
   admin: {
+    login:"/admin/login",
     addBook: "/admin/book/add",
     deleteBook: (id: string | number) => "/admin/book/delete/" + id,
     editBook: "/book/edit",

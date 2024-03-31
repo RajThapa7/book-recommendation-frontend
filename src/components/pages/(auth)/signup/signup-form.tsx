@@ -14,6 +14,7 @@ import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
 import LinkTag from "@/components/common/text/link";
 import { useRouter } from "next-nprogress-bar";
+import { useToast } from "@/lib/toast/useToast";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -24,6 +25,7 @@ const validationSchema = Yup.object({
 });
 
 const SignUpForm = () => {
+  const toast = useToast();
   const navigate = useRouter();
   const [signupApiCall] = useSignupMutation();
   const formik = useFormik({
@@ -35,6 +37,13 @@ const SignUpForm = () => {
     validationSchema: validationSchema,
     onSubmit: async (values: SignUpFormInterface) => {
       const response = await signupApiCall(values);
+      console.log(response);
+      if (response?.error?.status === 400) {
+        toast({
+          type: "error",
+          title: response.error?.data?.message,
+        });
+      }
       if (response?.data?.user) {
         navigate.replace(routes.auth.login);
       }

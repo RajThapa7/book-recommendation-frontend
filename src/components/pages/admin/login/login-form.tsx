@@ -3,21 +3,19 @@
 import React, { useEffect } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { routes } from "@/contants/routes";
 import InputComponent from "@/components/common/input/input";
 import ButtonComponent from "@/components/common/button/button";
 import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
-import LinkTag from "@/components/common/text/link";
-import {
-  useGetTokenQuery,
-  useLoginMutation,
-} from "@/store/features/auth/auth.api";
+import { useGetTokenQuery } from "@/store/features/auth/auth.api";
 import { LoginFormInterface } from "@/store/features/auth/auth.interface";
 import { setCookie } from "cookies-next";
 import { session } from "@/contants/token";
 import { useRouter } from "next-nprogress-bar";
 import { useToast } from "@/lib/toast/useToast";
+import { useAdminLoginMutation } from "@/store/features/admin/login/auth.api";
+import { routes } from "@/contants/routes";
+import Link from "next/link";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("User name is required"),
@@ -26,14 +24,14 @@ const validationSchema = Yup.object({
 
 const LoginForm = () => {
   const toast = useToast();
-  const [loginApiCall] = useLoginMutation();
-  const { data: tokenData } = useGetTokenQuery();
+  const [loginApiCall] = useAdminLoginMutation();
+  const { data: tokenData } = useGetTokenQuery({});
   const navigate = useRouter();
   useEffect(() => {
     if (tokenData?.token && tokenData?.user) {
       setCookie(session.token, tokenData?.token);
       setCookie(session.user, JSON.stringify(tokenData?.user));
-      navigate.replace("/books");
+      navigate.replace(routes.admin.books);
     }
   }, [tokenData]);
   const formik = useFormik({
@@ -72,8 +70,8 @@ const LoginForm = () => {
   return (
     <div className="w-[350px] mx-auto h-full justify-center flex flex-col">
       <div className="text-center pb-5">
-        <p className="text-center text-grey text-p">Welcome back!</p>
-        <FormHeader text="Login to your account" key={"login-header-text"} />
+        <p className="text-center text-grey text-p">Admin Panel!</p>
+        <FormHeader text="Login to admin panel" key={"login-header-text"} />
       </div>
       <form className="flex flex-col gap-4 pt-6" onSubmit={formik.handleSubmit}>
         <div className="w-full">
@@ -107,11 +105,8 @@ const LoginForm = () => {
           )}
         </div>
         <ButtonComponent text="Login" key={"login-btn"} type="submit" />
+        <Link className="text-p text-blue-600 text-center" href={routes.book.book}>Go back to book recommendation</Link>
       </form>
-      <p className="text-p-sm font-p text-center mt-4">
-        Not registered?{" "}
-        <LinkTag link={routes?.auth?.signup || "#"} text="Create an account" />
-      </p>
     </div>
   );
 };

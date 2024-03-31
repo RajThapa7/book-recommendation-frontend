@@ -11,5 +11,6 @@ export const routes = {
   admin: {
     books: "/admin/books",
     users: "/admin/users",
+    login: "/admin/login",
   },
 };

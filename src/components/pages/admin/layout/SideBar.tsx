@@ -3,6 +3,7 @@ import { routes } from "@/contants/routes";
 import { sidebarItems } from "@/contants/sidebar-items";
 import { deleteAllCookies } from "@/lib/delete-cookies";
 import { useToast } from "@/lib/toast/useToast";
+import { useLogoutMutation } from "@/store/features/auth/auth.api";
 import Sider from "antd/es/layout/Sider";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,11 +12,16 @@ import React from "react";
 
 const SideBar = () => {
   const router = useRouter();
+  const [logoutApiCall] = useLogoutMutation();
   const showToast = useToast();
-  const handleLogout = () => {
+  const handleLogout = async () => {
     deleteAllCookies();
-    showToast({ title: "User Logged Out", type: "success" });
-    router.push(routes.auth.login);
+    const data = await logoutApiCall({});
+    if (data?.data) {
+      router.push(routes.admin.login);
+      showToast({ title: "User Logged Out", type: "success" });
+      window.location.reload();
+    }
   };
   return (
     <Sider
