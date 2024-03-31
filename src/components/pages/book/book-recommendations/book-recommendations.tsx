@@ -5,7 +5,7 @@ import {
   useGetSavedBooksQuery,
   useListRelatedBooksMutation,
 } from "@/store/features/book/book.api";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import BookCard from "../book-card";
 
 export default function BookRecommendations() {
@@ -45,7 +45,7 @@ export default function BookRecommendations() {
             list: data?.books,
           });
           setLoadingCosineSimilarity(false);
-          setRelatedCosineBooks(response?.data?.list?.slice(1, 11));
+          setRelatedCosineBooks(response?.data?.list?.data);
         } catch (error) {
           console.error("Error fetching related books:", error);
           setLoadingCosineSimilarity(false);
@@ -71,7 +71,7 @@ export default function BookRecommendations() {
             Please wait a second...
           </p>
         )}
-        <div className="flex flex-wrap gap-12">
+        <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
           {relatedJaccardBooks &&
             relatedJaccardBooks?.map((p: any, index: number) => (
               <BookCard
@@ -91,7 +91,7 @@ export default function BookRecommendations() {
             ))}
         </div>
       </div>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 mt-12">
         <SectionTitle
           text="Recommendations of books(Cosine Similarity) "
           className="text-h4"
@@ -101,22 +101,20 @@ export default function BookRecommendations() {
             Please wait a second...
           </p>
         )}
-        <div className="flex flex-wrap gap-12">
+        <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
           {relatedCosineBooks &&
             relatedCosineBooks?.map((p: any, index: number) => (
               <BookCard
-                similarity={(p?.similarity * 100)
-                  ?.toFixed(2)
-                  ?.toString()}
+                similarity={(p?.similarity * 100)?.toFixed(2)?.toString()}
                 key={index + "recommend"}
-                title={p?.book?.title}
-                rating={p?.book?.average_rating}
-                image={p?.book?.image_url}
-                author={p?.book?.authors}
-                language={p?.book?.language_code}
-                date={p?.book?.original_publication_year}
-                id={p?.book?._id}
-                bookId={p?.book?.id}
+                title={p?.title}
+                rating={p?.average_rating}
+                image={p?.image_url}
+                author={p?.authors}
+                language={p?.language_code}
+                date={p?.original_publication_year}
+                id={p?._id}
+                bookId={p?.id}
               />
             ))}
         </div>
