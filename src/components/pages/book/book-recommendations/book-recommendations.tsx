@@ -45,7 +45,7 @@ export default function BookRecommendations() {
             list: data?.books,
           });
           setLoadingCosineSimilarity(false);
-          setRelatedCosineBooks(response?.data?.list?.data);
+          setRelatedCosineBooks(response?.data?.list?.data?.slice(1, 11));
         } catch (error) {
           console.error("Error fetching related books:", error);
           setLoadingCosineSimilarity(false);

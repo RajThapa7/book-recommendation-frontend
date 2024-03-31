@@ -66,26 +66,7 @@ export default function BookComponent() {
           btnClick={() => router.push("/books/collection")}
         />
       </center>
-      {/* <SectionTitle text="Our Recommendations" className="text-h4" />
-      <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {!isRecommendationLoading
-          ? recommendedBooks?.data?.map((p: any, index: number) => (
-              <BookCard
-                key={index + "recommend"}
-                title={p?.title}
-                rating={p?.average_rating}
-                image={p?.image_url}
-                author={p?.authors}
-                language={p?.language_code}
-                date={p?.original_publication_year}
-                id={p?._id}
-                bookId={p?.id}
-              />
-            ))
-          : Array.from({ length: 4 }).map((_, index) => (
-              <BookSkeletal key={index} />
-            ))}
-      </div> */}
+
       <BookRecommendations />
     </div>
   );

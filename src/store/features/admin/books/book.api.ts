@@ -1,9 +1,9 @@
 import { endpoints } from "@/contants/endpoints";
-import { protectedBaseQuery } from "@/store/base-query/base-query";
+import { AdminProtectedBaseQuery } from "@/store/base-query/base-query";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const AdminBookApi = createApi({
-  baseQuery: protectedBaseQuery,
+  baseQuery: AdminProtectedBaseQuery,
   reducerPath: "AdminBookApi",
   tagTypes: ["AdminBook"],
   endpoints: (build) => ({
