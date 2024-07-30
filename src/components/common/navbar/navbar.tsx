@@ -1,13 +1,13 @@
 "use client";
-import React, { useState } from "react";
-import Image from "next/image";
 import { routes } from "@/contants/routes";
-import { getToken } from "@/lib/getToken";
-import { useLogoutMutation } from "@/store/features/auth/auth.api";
-import DrawerComponent from "../drawer/drawer";
-import { useRouter } from "next-nprogress-bar";
 import { deleteAllCookies } from "@/lib/delete-cookies";
+import { getToken } from "@/lib/getToken";
 import { useToast } from "@/lib/toast/useToast";
+import { useLogoutMutation } from "@/store/features/auth/auth.api";
+import { useRouter } from "next-nprogress-bar";
+import Image from "next/image";
+import { useState } from "react";
+import DrawerComponent from "../drawer/drawer";
 
 export default function Navbar() {
   const toast = useToast();
@@ -17,7 +17,7 @@ export default function Navbar() {
   const logoutHandler = async () => {
     deleteAllCookies();
     const data = await logoutApiCall({});
-    if (data?.data) {
+    if (data) {
       router.replace(routes.auth.login);
       toast({ title: "User Logged Out", type: "success" });
       window.location.reload();

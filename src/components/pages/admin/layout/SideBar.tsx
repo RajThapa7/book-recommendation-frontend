@@ -8,7 +8,6 @@ import Sider from "antd/es/layout/Sider";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React from "react";
 
 const SideBar = () => {
   const router = useRouter();
@@ -16,7 +15,7 @@ const SideBar = () => {
   const showToast = useToast();
   const handleLogout = async () => {
     deleteAllCookies();
-    const data = await logoutApiCall({});
+    const data: any = await logoutApiCall({});
     if (data?.data) {
       router.push(routes.admin.login);
       showToast({ title: "User Logged Out", type: "success" });

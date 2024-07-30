@@ -1,20 +1,19 @@
 //auth sign up form
 "use client";
 
-import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { routes } from "@/contants/routes";
-import { SignUpFormInterface } from "@/store/features/auth/auth.interface";
-import { useSignupMutation } from "@/store/features/auth/auth.api";
-import InputComponent from "@/components/common/input/input";
 import ButtonComponent from "@/components/common/button/button";
+import InputComponent from "@/components/common/input/input";
 import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
 import LinkTag from "@/components/common/text/link";
-import { useRouter } from "next-nprogress-bar";
+import { routes } from "@/contants/routes";
 import { useToast } from "@/lib/toast/useToast";
+import { useSignupMutation } from "@/store/features/auth/auth.api";
+import { SignUpFormInterface } from "@/store/features/auth/auth.interface";
+import { useRouter } from "next-nprogress-bar";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -36,8 +35,7 @@ const SignUpForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values: SignUpFormInterface) => {
-      const response = await signupApiCall(values);
-      console.log(response);
+      const response: any = await signupApiCall(values);
       if (response?.error?.status === 400) {
         toast({
           type: "error",

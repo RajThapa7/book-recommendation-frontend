@@ -1,8 +1,6 @@
-import React from "react";
-import MedicationFormComponent from "../book-form";
-import { BookFieldValue } from "../book-form.interface";
 import { useToast } from "@/lib/toast/useToast";
 import { useAddBookMutation } from "@/store/features/admin/books/book.api";
+import MedicationFormComponent from "../book-form";
 
 export default function AddBookComponent({
   show,
@@ -13,7 +11,7 @@ export default function AddBookComponent({
 }) {
   const [bookAddMutation] = useAddBookMutation();
   const showToast = useToast();
-  const submitHandler = async (values: BookFieldValue) => {
+  const submitHandler = async (values: any) => {
     console.log(values);
     const formData = new FormData();
     formData.append("image", values?.file?.[0]?.originFileObj);
@@ -28,7 +26,7 @@ export default function AddBookComponent({
       values?.original_publication_year
     );
     formData.append("original_title", values?.original_title);
-    const data = await bookAddMutation({
+    const data: any = await bookAddMutation({
       data: formData,
     });
     if (data?.error?.status === 400) {

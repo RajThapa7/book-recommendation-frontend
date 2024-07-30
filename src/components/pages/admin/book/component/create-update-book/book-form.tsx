@@ -1,14 +1,18 @@
 "use client";
-import React, { useEffect } from "react";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import { DatePicker, Image as ImagePreview } from "antd";
-import { Upload } from "antd";
-import { Input, UploadProps } from "antd";
 import AddEditPopup from "@/components/common/modal/AddEditPopup";
-import Image from "next/image";
-import { BookFieldValue } from "./book-form.interface";
 import { PrimaryButton } from "@/components/common/modal/modal.buttons";
+import {
+  DatePicker,
+  Image as ImagePreview,
+  Input,
+  Upload,
+  UploadProps,
+} from "antd";
+import { useFormik } from "formik";
+import Image from "next/image";
+import { useEffect } from "react";
+import * as Yup from "yup";
+import { BookFieldValue } from "./book-form.interface";
 const { Dragger } = Upload;
 export default function MedicationFormComponent({
   show,
@@ -57,7 +61,7 @@ export default function MedicationFormComponent({
         formFields?.original_publication_year
       );
       formik.setFieldValue("original_title", formFields?.original_title);
-    }else{
+    } else {
       formik.resetForm();
     }
   }, [status, formFields]);
@@ -196,7 +200,7 @@ export default function MedicationFormComponent({
             multiple={false}
             accept="image/jpg,image/png,image/jpeg"
             onChange={handleChange}
-            fileList={formik.values.file}
+            fileList={formik.values.file as any}
           >
             <p className="ant-upload-drag-icon"></p>
             <p className="text-[16px] font-medium">

@@ -1,19 +1,19 @@
 "use client";
-import React, { useState } from "react";
-import Image from "next/image";
 import { Pagination, Image as PreviewImage } from "antd";
+import Image from "next/image";
+import { useState } from "react";
 
-import AddMeditation from "./component/create-update-book/add-book/add-book";
-import UpdateMedicationComponent from "./component/create-update-book/update-book/update-book";
 import DeleteConfirmationPopup from "@/components/common/modal/DeleteConfirmationPopup";
-import { BookFieldValue } from "./component/create-update-book/book-form.interface";
+import { PrimaryButton } from "@/components/common/modal/modal.buttons";
+import CusTable from "@/components/common/table/Table";
 import { useToast } from "@/lib/toast/useToast";
 import {
   useBookDeleteMutation,
   useGetAllBooksQuery,
 } from "@/store/features/admin/books/book.api";
-import { PrimaryButton } from "@/components/common/modal/modal.buttons";
-import CusTable from "@/components/common/table/Table";
+import AddMeditation from "./component/create-update-book/add-book/add-book";
+import { BookFieldValue } from "./component/create-update-book/book-form.interface";
+import UpdateMedicationComponent from "./component/create-update-book/update-book/update-book";
 
 const AdminBookComponent = () => {
   const showToast = useToast();
@@ -74,7 +74,7 @@ const AdminBookComponent = () => {
       title: "Action",
       key: "action",
       width: 160,
-      render: (data: BookFieldValue) => (
+      render: (data: any) => (
         <div className="flex flex-row gap-2 items-center ">
           <Image
             src={"/icons/edit.svg"}
@@ -154,7 +154,7 @@ const AdminBookComponent = () => {
         dataSource={data?.data
           ?.slice()
           ?.sort((a: { id: number }, b: { id: number }) => a?.id - b?.id)
-          ?.map((p: BookFieldValue, index: number) => {
+          ?.map((p: any, index: number) => {
             return {
               ...p,
               authors: p?.authors || p?.author,

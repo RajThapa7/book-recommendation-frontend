@@ -1,4 +1,3 @@
-import { PaginationMetaDTO } from "@/core/interface/pagination.base";
 import { TablePaginationConfig } from "antd";
 
 export interface CusTableProps {
@@ -11,5 +10,4 @@ export interface CusTableProps {
   renderFooter?: any;
   pagination?: false | TablePaginationConfig | undefined;
   onRowClick?: any;
-  paginationMeta?: PaginationMetaDTO;
 }

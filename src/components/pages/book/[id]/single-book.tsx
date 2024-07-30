@@ -4,14 +4,14 @@ import {
   useGetBookByIdQuery,
   useRecomendationOfBookMutation,
 } from "@/store/features/book/book.api";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import BookCard from "../book-card";
 import BookDescription from "./book-decription";
-import { useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
 
 export default function SingleBookComponent() {
   const searchParams = useSearchParams();
-  const [relatedBook, setRelatedBooks] = useState(null);
+  const [relatedBook, setRelatedBooks] = useState<any>(null);
   const path = usePathname();
   const { data } = useGetBookByIdQuery({
     id: path?.replace("/books/", ""),
@@ -26,7 +26,7 @@ export default function SingleBookComponent() {
             author: data?.data?.authors,
             title: data?.data?.title,
           });
-          setRelatedBooks(response?.data?.data?.slice(1,11));
+          setRelatedBooks(response?.data?.data?.slice(1, 11));
         } catch (error) {
           console.error("Error fetching related books:", error);
         }

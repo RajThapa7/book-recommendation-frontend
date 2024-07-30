@@ -17,11 +17,11 @@ export default function BookRecommendations() {
   const [getRelatedBook] = useListRelatedBooksMutation();
   const [cosineSimilarityRelatedBooks] =
     useCosineSimilarityRecommendationMutation();
-  const [relatedJaccardBooks, setRelatedJaccardBooks] = useState(null);
+  const [relatedJaccardBooks, setRelatedJaccardBooks] = useState<any>(null);
   const [loadingJaccard, setLoadingJaccard] = useState<boolean>(false);
   const [loadingCosineSimilarity, setLoadingCosineSimilarity] =
     useState<boolean>(false);
-  const [relatedCosineBooks, setRelatedCosineBooks] = useState(null);
+  const [relatedCosineBooks, setRelatedCosineBooks] = useState<any>(null);
 
   useEffect(() => {
     setLoadingJaccard(true);

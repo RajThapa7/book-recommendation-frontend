@@ -1,22 +1,18 @@
 "use client";
 
-import React, { useEffect } from "react";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import InputComponent from "@/components/common/input/input";
 import ButtonComponent from "@/components/common/button/button";
+import InputComponent from "@/components/common/input/input";
 import ErrorMessage from "@/components/common/text/error-message";
 import FormHeader from "@/components/common/text/form-header";
-import { useGetTokenQuery } from "@/store/features/auth/auth.api";
-import { LoginFormInterface } from "@/store/features/auth/auth.interface";
-import { setCookie } from "cookies-next";
-import { session } from "@/contants/token";
-import { useRouter } from "next-nprogress-bar";
+import { routes } from "@/contants/routes";
 import { useToast } from "@/lib/toast/useToast";
 import { useAdminLoginMutation } from "@/store/features/admin/login/auth.api";
-import { routes } from "@/contants/routes";
+import { LoginFormInterface } from "@/store/features/auth/auth.interface";
+import { setCookie } from "cookies-next";
+import { useFormik } from "formik";
+import { useRouter } from "next-nprogress-bar";
 import Link from "next/link";
-import { deleteAllCookies } from "@/lib/delete-cookies";
+import * as Yup from "yup";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("User name is required"),
@@ -36,7 +32,7 @@ const LoginForm = () => {
 
     onSubmit: async (values: LoginFormInterface) => {
       try {
-        const response = await loginApiCall(values);
+        const response:any = await loginApiCall(values);
         if (response?.error?.status !== 400) {
           setCookie("adminToken", response?.data?.token);
           setCookie("adminUser", JSON.stringify(response?.data?.user));

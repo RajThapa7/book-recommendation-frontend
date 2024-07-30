@@ -1,8 +1,7 @@
-import React from "react";
-import MedicationFormComponent from "../book-form";
-import { BookFieldValue } from "../book-form.interface";
 import { useToast } from "@/lib/toast/useToast";
 import { useBookUpdateMutation } from "@/store/features/admin/books/book.api";
+import MedicationFormComponent from "../book-form";
+import { BookFieldValue } from "../book-form.interface";
 
 export default function UpdateBookComponent({
   show,
@@ -17,7 +16,7 @@ export default function UpdateBookComponent({
 }) {
   const showToast = useToast();
   const [bookUpdateMutation] = useBookUpdateMutation();
-  const submitHandler = async (values: BookFieldValue) => {
+  const submitHandler = async (values: any) => {
     console.log(values);
     try {
       const formData = new FormData();
